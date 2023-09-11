@@ -1,0 +1,354 @@
+{%extends 'executive/ex_base.html'%}
+{%load static%}
+{%block content%}
+
+<style>
+  .type_select
+  {
+    background: transparent;
+    padding: 0.30rem;
+    padding-right: 1rem;
+    margin-right: 0.60rem;
+    color: rgb(243, 167, 16);
+    border: none;
+   
+  }
+  .input-fields-container
+  {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+  }
+</style>
+<style>
+  select
+  {
+    width: 100%;
+    margin-top: 0.75rem;
+  }
+  label
+  {
+    font-size: 0.85rem;
+    color: #727272;
+  }
+  .data__card
+  {
+    display: flex;
+    align-items: center;
+    flex-direction:column ;
+    justify-content: space-between;
+    padding: 2rem;
+   
+  }
+  .field_boxtop
+  {
+    display: flex;
+    align-items: center;
+    justify-content:center;
+    gap: 1rem;
+    flex-direction: row;
+    margin-bottom: 2rem;
+    width: min(100% - 12px, 700px);
+    margin-top: 2rem;
+    
+  }
+  .select_opt
+  {
+    padding: .4375rem .75rem;
+    border: 0;
+    color: #4b5564;
+    font-size: 0.85rem;
+    background: #282828;
+  }
+  .data_submit
+  {
+    padding: 2rem 2rem;
+    text-align: center;
+    background: #1c1c1c;
+    width: min(100% - 12px, 700px)
+  }
+  .data_submit h3
+  {
+    text-align: center;
+    font-size: 1.1rem;
+    letter-spacing: 0.06rem;
+  }
+  .submit_btn
+  {
+    margin-top: 2.5rem;
+  }
+  .input__box
+  {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  
+  .form-control,
+  .form-control:focus, .select_opt:focus
+  {
+    color: rgb(243, 243, 244);
+  }
+  .form-control::placeholder, .select_opt::placeholder
+  {
+    color: rgb(131, 131, 131);
+  }
+
+  .label__box
+  {
+    width:min(100% - 5px, 200px);
+    font-size: 1rem;
+    text-transform: capitalize;
+  }
+  .leadBox__head
+  {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  .leadBox__head h3{
+    margin-top: 1rem;
+  }
+  .table
+  {
+    margin-top: 2rem;
+  }
+ 
+ 
+  
+</style>
+
+<div class="row pt-3" style="background-color: black;">
+    <div class="" style="font-size: 20px;font-weight: 600;color:#6C7293;">TASK</div>
+</div>
+
+<div class="row mt-4">
+ 
+    <div class="card">
+     
+      <div class="card-body">
+        {% if lead_file %}
+        <div class="card-title">Task Form</div>
+        <p>Excel File Created with Below Fields.</p>
+        
+        <div class="fieldBox">
+          {% for r in requird_field %}
+          <div class="badge badge-outline-danger">
+            
+            {{r.requiredfield_name}}</div>
+          {% endfor %}
+      </div>
+        <div class="mt-2 text-end">
+          <a href="#" class="btn btn-outline-info"><span class="mdi mdi-checkbox-marked-circle-outline"> File Created </span> </a>
+        </div>
+        {% else %}
+        <div class="card-title">Task Form</div>
+        <p>Create a form with below fields and collect data to that fields.</p>
+        <div class="fieldBox">
+            {% for r in requird_field %}
+            <div class="badge badge-outline-danger">
+              
+              {{r.requiredfield_name}}</div>
+            {% endfor %}
+        </div>
+        <div class="mt-2 text-end">
+          <a href="#" class="btn btn-outline-success" data-toggle="modal" data-target="#dis">+ Create File</a>
+        </div>
+        {% endif %}
+
+      </div>
+    </div>
+
+
+
+<!------ =============== SECTION 2 ============-->
+      
+
+{% if lead_file %}
+<div class="card mt-4 data__card">
+  <div class="mb-3"><span>File Name :&nbsp; </span>
+    <a href="{{ lead_file.file.url }}" style="color: #1a0c94;">
+      {{ lead_file.file_name }}&nbsp; <span class="mdi mdi-download btn"></span>  
+    </a>
+  </div>
+  
+  <form action="{% url 'ex_file_save' work_id.id %}" method="post" class="data_submit" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="lead__file" class="form-control" accept=".xlsx" required>
+    <input type="hidden" value="{{lead_file.id}}" name="file_id" required>
+    <button class="btn btn-outline-success mt-4">upload</button>
+
+  </form>
+
+
+
+  <div class="leadBox__head">
+    <h3 class="mb-3">lead - Collected Data  - </h3>
+    <button class="btn btn-outline-danger"> {{num_data_rows}}</button>
+  </div>
+
+  
+  {% for leads_file in total_lead_files %}
+    
+      <table class="table table-bordered ">
+          <tr>
+              {% for header in leads_file.data.0 %}
+                  <th>{{ header }}</th>
+              {% endfor %}
+          </tr>
+          {% for row in leads_file.data %}
+              <tr>
+                  {% for value in row.values %}
+                      <td>{{ value }}</td>
+                  {% endfor %}
+              </tr>
+          {% endfor %}
+      </table>
+  {% endfor %}
+
+</div>
+
+{% endif %}
+
+<div class="rowmt-5 modal fade" id="dis">
+  <div class="modal-dialog bd-example-modal-xl modal-dialog-centered" role="document" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-content modal-xl" style="background-color: #191c24;">
+      <div class="card ">
+        <div class="card-body">
+          <button type="button" class="close text-light" data-dismiss="modal" aria-label=""
+            style="background-color: #191c24;border:none;float: right;font-size: 20px;">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <div class="text-info" style="font-size: 20px;font-weight: 600;">Set File name</div>
+
+          <div class="card">
+            <form action="{% url 'ex_create_excel_file' work_id.id %}" method="post" class="data_submit">
+              {% csrf_token %}
+              <input type="text" name="file_name" class="form-control" required>
+              <button type="submit" class="btn btn-outline-success mt-3"> Save</button>
+            </form>
+            
+          </div>
+
+        
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<!-- <div class="card mt-4 data__card">
+  <h5>Create required fields</h5>
+  
+  <div class="field_boxtop">
+    <div>
+      <label>Field Name:</label>
+      <select id="label-name" class="select_opt" >
+        {% for f in requird_field %}
+        <option value="{{f.requiredfield_name}}">{{f.requiredfield_name}}</option>
+        {% endfor %}
+      </select> 
+      
+    </div>
+   
+    <div>
+      <label>Input Type:  </label>
+      <select id="input-type" class="select_opt">
+            <option value="text">Text</option>
+            <option value="number">Number</option>
+            <option value="email">Email</option>
+            <option value="file">File</option>
+           
+      </select>
+    </div>
+    
+    <div>
+      <button id="add-input-button" class="btn btn-outline-info " >+ Add Field</button>
+    </div>
+   
+
+  </div>
+  
+ 
+  <form id="dynamic-form" method="POST" action="#" class="data_submit"  enctype="multipart/form-data">
+      {% csrf_token %}
+<input type="text" name="wid" value="{{work_id.id}}" hidden>
+      <div id="input-fields-container">
+      
+      </div>
+      <button id="submit-button" class="btn btn-outline-success mt-5" onclick="openDialog()">Submit</button>
+  </form>
+</div> -->
+
+<!-- <script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const inputFieldsContainer = document.getElementById('input-fields-container');
+    const addInputButton = document.getElementById('add-input-button');
+    
+
+    addInputButton.addEventListener('click', function () {
+        const labelName = document.getElementById('label-name').value;
+        const inputType = document.getElementById('input-type').value;
+
+        if (!labelName || !inputType) {
+            alert('Please provide a label name and select an input type.');
+            return;
+        }
+
+       
+        const inputFieldBox = document.createElement('div');
+        inputFieldBox.className = 'input__box'
+
+        const inputLabel = document.createElement('label');
+        inputLabel.textContent = labelName;
+        inputLabel.className= 'label__box';
+
+        const inputField = document.createElement('input');
+        inputField.setAttribute('type', inputType);
+        inputField.setAttribute('name', labelName);
+        inputField.className = 'form-control';
+        inputField.setAttribute('required', ''); // Add the "required" attribute
+        inputField.setAttribute('placeholder','Entetr  the  '+ labelName);
+        inputFieldBox.appendChild(inputLabel);
+        inputFieldBox.appendChild(inputField);
+        inputFieldBox.className = 'input__box'
+        inputFieldsContainer.appendChild(inputFieldBox);
+
+        // Clear the input fields after adding an input
+        //document.getElementById('label-name').value = '';
+        document.getElementById('input-type').value = 'text';
+    });
+
+    submitButton.addEventListener('click', function () {
+        dynamicForm.submit();
+    });
+});
+
+</script> -->
+
+
+<script>
+  function openDialog() {
+  var frm=document.getElementById("dynamic-form");
+    
+  let customMsg = "Do you want to submit?";
+  
+  if (confirm(customMsg)) {
+    frm.action=("{% url 'ex_task_lead_form' %}")
+  } else {
+    console.log("User Clicked CANCEL");
+  }
+}
+</script>
+
+{% endblock%}

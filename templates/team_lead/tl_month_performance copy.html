@@ -1,0 +1,197 @@
+{% extends 'team_lead/tl_base.html' %} 
+{%load static%}
+{% load custom_filters %}
+{%block content%}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  .image-clickable {
+  cursor: pointer;
+  max-width: 100px; /* Adjust the size as needed */
+  max-height: 100px; /* Adjust the size as needed */
+}
+
+/* The Modal (background) */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  padding-top: 100px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+/* Modal Content (image) */
+.modal-content {
+  margin: auto;
+  display: block;
+  max-width: 70%;
+  max-height: 90%;
+}
+
+/* Close Button */
+.close {
+  position: absolute;
+  top: 15px;
+  right: 35px;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
+#chartContainer {
+            max-width: 600px; /* Adjust the maximum width as needed */
+            float: left; /* Center the chart container */
+        }
+</style>
+
+
+<div class="row pt-3" style="background-color: black;">
+<div class="row mt-4 ">
+  </div>
+      <div class="card">
+          <div class="card-body">
+
+            <div class="row ">
+              <div class="col-sm-4">
+                <h4 class="mb-1">Executive Name</h4>
+              </div>
+              <div class="col-sm-2">
+                <h4 class="text-muted mb-0 mx-5">:</h4>
+              </div>
+              <div class="col-sm-6">
+                <h4 class="text-muted mb-0 mx-5">{{wp.pref_exe_name.fullname}}</h4>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-sm-4">
+                <h4 class="mb-1">Task</h4>
+              </div>
+              <div class="col-sm-2">
+                <h4 class="text-muted mb-0 mx-5">:</h4>
+              </div>
+              <div class="col-sm-6">
+                <h4 class="text-muted mb-0 mx-5">{{wp.client_work.task}}</h4>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-sm-4">
+                <h4 class="mb-1">Client</h4>
+              </div>
+              <div class="col-sm-2">
+                <h4 class="text-muted mb-0 mx-5">:</h4>
+              </div>
+              <div class="col-sm-6">
+                <h4 class="text-muted mb-0 mx-5">{{wp.client_perf_name.bs_name}}</h4>
+              </div>
+            </div>
+            
+           
+          </div>
+                 
+          </div>
+      </div>
+      
+      <div class="row mt-4">
+        <div class="card">
+          <div class="card-body">
+            <!-- <div class="card-title">Work Progress Report</div>  -->
+           
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col" style="color:#6C7293;">Previous Week Count</th>
+                    <th scope="col" style="color:#6C7293;">Last Week Count</th>
+                    <th scope="col" style="color:#6C7293;">Week Performance</th>
+                  </tr>
+                </thead>
+                <tbody id="myTable">
+                    <tr>
+                      <td style="color:white;">{{wp.previous_week}}</td>
+                    <td style="color:white;">{{wp.current_week}}</td>
+                    <td style="color:white;" id="weekPerformanceValue">{{wp.week_perfomance}}</td>
+                   
+                    </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+     
+      
+      <div class="row pt-3 mt-5" style="background-color: black;">
+        <div class="pb-5" style="font-size: 20px;font-weight: 600;color:#6C7293;">GRAPHICAL STATISTICAL VIEW</div>
+
+        <div  id="chartContainer">
+          <canvas id="weekPerformanceChart" width="400" height="400"></canvas>
+      </div>
+  
+
+        <p>Percentage: {{ wp.week_perfomance }}</p>
+
+      </div>
+      
+      
+  </div>
+<script>
+    // Get the percentage value from the backend (Django variable)
+    var percentageStr = document.getElementById('weekPerformanceValue').textContent;
+    var percentage = parseFloat(percentageStr.replace('%', ''));
+    // var percentage = 70
+
+    // Create a data array with the percentage value and the remaining (100 - percentage)
+    var data = [percentage, 100 - percentage];
+
+    // Create the pie chart using Chart.js
+    var ctx = document.getElementById('weekPerformanceChart').getContext('2d');
+    var myPieChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Week Performance', 'Remaining'],
+            datasets: [{
+                data: data,
+                backgroundColor: ['blue', 'gray'], // Add colors for the segments
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+        }
+    });
+</script>
+ 
+  
+  <!-- container-scroller -->
+  <!-- plugins:js -->
+  <script src="../../assets/vendors/js/vendor.bundle.base.js"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page -->
+  <script src="../../assets/vendors/chart.js/Chart.min.js"></script>
+  <!-- End plugin js for this page -->
+  <!-- inject:js -->
+  <script src="../../assets/js/off-canvas.js"></script>
+  <script src="../../assets/js/hoverable-collapse.js"></script>
+  <script src="../../assets/js/misc.js"></script>
+  <script src="../../assets/js/settings.js"></script>
+  <script src="../../assets/js/todolist.js"></script>
+  <!-- endinject -->
+  <!-- Custom js for this page -->
+  <script src="../../assets/js/chart.js"></script>
+  <!-- End custom js for this page -->
+
+  
+
+{% endblock %}

@@ -1,0 +1,305 @@
+{% extends 'team_lead/tl_base.html' %} 
+{%load static%}
+{% load custom_filters %}
+{%block content%}
+<style>
+  .image-clickable {
+  cursor: pointer;
+  max-width: 100px; /* Adjust the size as needed */
+  max-height: 100px; /* Adjust the size as needed */
+}
+
+/* The Modal (background) */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  padding-top: 100px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+/* Modal Content (image) */
+.modal-content {
+  margin: auto;
+  display: block;
+  max-width: 70%;
+  max-height: 90%;
+}
+
+/* Close Button */
+.close {
+  position: absolute;
+  top: 15px;
+  right: 35px;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
+</style>
+
+
+<div class="row pt-3" style="background-color: black;">
+<div class="row mt-4 ">
+  </div>
+      <div class="card">
+          <div class="card-body">
+
+            <div class="row ">
+              <div class="col-sm-4">
+                <h4 class="mb-1">Executive Name</h4>
+              </div>
+              <div class="col-sm-2">
+                <h4 class="text-muted mb-0 mx-5">:</h4>
+              </div>
+              <div class="col-sm-6">
+                <h4 class="text-muted mb-0 mx-5">{{work.user.fullname}}</h4>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-sm-4">
+                <h4 class="mb-1">Start Date</h4>
+              </div>
+              <div class="col-sm-2">
+                <h4 class="text-muted mb-0 mx-5">:</h4>
+              </div>
+              <div class="col-sm-6">
+                <h4 class="text-muted mb-0 mx-5">{{work.start_date}}</h4>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-sm-4">
+                <h4 class="mb-1">End Date</h4>
+              </div>
+              <div class="col-sm-2">
+                <h4 class="text-muted mb-0 mx-5">:</h4>
+              </div>
+              <div class="col-sm-6">
+                <h4 class="text-muted mb-0 mx-5">{{work.end_date}}</h4>
+              </div>
+            </div>
+            
+           
+          </div>
+                 
+          </div>
+      </div>
+      {% if sm %}
+      <div class="row mt-4">
+        <div class="card">
+          <div class="card-body">
+            <!-- <div class="card-title">Work Progress Report</div>  -->
+           
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col" style="color:#6C7293;">Platform</th>
+                    <th scope="col" style="color:#6C7293;">Title</th>
+                    <th scope="col" style="color:#6C7293;">File</th>
+                    <th scope="col" style="color:#6C7293;">Count</th>
+                    <th scope="col" style="color:#6C7293;">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="myTable">
+                  {% for s in sm %}
+                    <tr>
+                      <td style="color:white;">{{s.smo_platform}}</td>
+                    <td style="color:white;">{{s.smo_platform_title}}</td>
+                    <!-- <td style="color:white;">{{s.smo_files}}</td> -->
+                    <td style="color:white;">
+                      {% if s.smo_files.name|file_extension_is_image %}
+                      <img class="image-clickable" src="{{ s.smo_files.url }}" alt="Image" />
+                      {% else %}
+                      <div class="badge badge-outline-primary"><a style="text-decoration: none;" href="{{ s.smo_files.url }}" download>
+                          Download</a>
+                      </div>
+                      {% endif %}
+                  </td>
+                    <td style="color:white;">{{s.smo_count}}</td>
+                    <td class="text-primary"><a href="" data-toggle="modal" data-target="#count_change" data-id="{{ s.id }}" id="change_btn">
+                      <div class="badge badge-outline-primary mt-1">Change Count</div></a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      <div class="pt-3 float-end" style="background-color: black;">
+        <div class="d-inline" style="font-size: 20px; font-weight: 600; color: #6C7293;">
+          {% if work.audit_rprt %}
+          <a href="{{work.audit_rprt.url}}" style="text-decoration: none;">
+          {% endif %}
+          <button class="btn btn-primary">AUDIT REPORT</button>
+          </a>
+        </div>
+        <!-- <div class="d-inline" style="font-size: 20px; font-weight: 600; color: #6C7293;">
+          <a href="{% url 'tl_week_performance' work.work.id %}" class="btn btn-primary">PERFORMANCE</a>
+        </div> -->
+      </div>
+      
+      <div class="row pt-3 mt-5" style="background-color: black;">
+        <div class="" style="font-size: 20px;font-weight: 600;color:#6C7293;">GRAPHICAL STATISTICAL VIEW</div>
+      </div>
+      
+      <div class="row mt-5">
+        <div class="row mt-1">
+          
+          <div class="col-lg-6 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title" style="color:white;">Last Week Graph</h4>
+                <img src="{{work.graph.url}}" style="width:27rem" alt="">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 grid-margin stretch-card">
+          <div class="card" >
+            <div class="card-body">
+              <h4 class="card-title" style="color:white;">Previous Week Graph</h4>
+              {% if prv_work.graph != ""%}
+              <div style="width:30rem">
+                <img src="{{prv_work.graph.url}}" style="width:28rem" alt="">
+              </div>
+              {%else%}
+            {%endif%}
+            </div>
+          </div>
+        </div>
+      
+        
+        
+      </div>
+
+
+     
+  </div>
+
+  <!-- image modal -->
+
+  <div id="imageModal" class="modal">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="modalImage" />
+  </div>
+  
+  <!-- status change modal -->
+
+<div class="rowmt-5 hidden modal fade" id="count_change">
+  <div class="modal-dialog bd-example-modal-xl modal-dialog-centered" role="document" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-hidden="true" >
+    <div class="modal-content modal-xl" style="background-color: #191c24;">
+      <div class="card ">
+        <div class="card-body">
+          <button type="button" class="close text-light" data-bs-dismiss="modal" aria-label=""
+            style="background-color: #191c24;border:none;float: right;font-size: 20px;">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <div class="text-info" style="font-size: 20px;font-weight: 600;">Change Count</div>
+          
+          
+          <form action="{% url 'tl_change_progress_count' %}" method="POST" enctype="multipart/form-data">
+            {%csrf_token%}
+            <div class="row pt-1 mt-1">
+              <div class="col-md-4">
+                <div class="mr-2 ml-3 mt-2 text-light" style="color:white;">Current Count</div>
+              </div>
+              <div class="col">
+                <input type="number" class="form-control ml-3 mt-2 text-light" name="cur_count" > 
+              </div>
+            </div>
+            <div class="row pt-1 mt-1">
+              <div class="col-md-4">
+                <div class="mr-2 ml-3 mt-2 text-light" style="color:white;">New Count</div>
+              </div>
+              <div class="col">
+                <input type="number" class="form-control ml-3 mt-2 text-light" name="new_count" > 
+              </div>
+            </div>
+            <div class="row mt-4 mx-2" style="display: none;">
+              <input type="number" id="inputField2" name="sid" class="form-control">           
+            </div>
+            
+            <div class="row mt-5">
+              <div class="col-sm-12" style="text-align: center;">
+                <input type="submit" class="btn btn-outline-primary">
+              </div>
+            </div>
+            
+          </form>
+          </div> 
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  
+  <!-- container-scroller -->
+  <!-- plugins:js -->
+  <script src="../../assets/vendors/js/vendor.bundle.base.js"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page -->
+  <script src="../../assets/vendors/chart.js/Chart.min.js"></script>
+  <!-- End plugin js for this page -->
+  <!-- inject:js -->
+  <script src="../../assets/js/off-canvas.js"></script>
+  <script src="../../assets/js/hoverable-collapse.js"></script>
+  <script src="../../assets/js/misc.js"></script>
+  <script src="../../assets/js/settings.js"></script>
+  <script src="../../assets/js/todolist.js"></script>
+  <!-- endinject -->
+  <!-- Custom js for this page -->
+  <script src="../../assets/js/chart.js"></script>
+  <!-- End custom js for this page -->
+
+  <script>
+    $(document).on('click', '#change_btn', function() {
+     var sid = $(this).data('id');
+    $('#inputField2').val(sid);
+     console.log(sid); 
+     
+   });
+   </script>
+   <script>
+    // Get the modal
+const modal = document.getElementById('imageModal');
+
+// Get the image and insert it inside the modal
+const image = document.getElementById('modalImage');
+const images = document.getElementsByClassName('image-clickable');
+
+// Loop through all images and add the click event
+for (let i = 0; i < images.length; i++) {
+  images[i].addEventListener('click', function () {
+    modal.style.display = 'block';
+    image.src = this.src;
+  });
+}
+
+// Close the modal when the close button or outside the modal is clicked
+const closeButton = document.getElementsByClassName('close')[0];
+window.onclick = function (event) {
+  if (event.target === modal || event.target === closeButton) {
+    modal.style.display = 'none';
+  }
+};
+   </script>
+
+{% endblock %}

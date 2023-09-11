@@ -1,0 +1,1708 @@
+{%extends 'head/he_base.html'%}
+{%load static%}
+{%block content%}
+
+<div class="row pt-3" style="background-color: black;">
+  <div class="" style="font-size: 20px;font-weight: 600;color:#6C7293;">ALTOS TECHNOLOGIES</div>
+</div>
+
+<div class="row mt-4 ">
+      <div class="card">
+          <div class="card-body">
+                  <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row  px-md-3 px-xl-4 rounded mt-3">
+                      <div class="w-50">
+                          <h6 class="mb-1">BUSINESS NAME</h6>
+                        
+                      </div>
+                      <div class=" flex-grow text-left  py-md-2 py-xl-0">
+                          <h6 class="text-muted mb-0 mx-5">{{client.bs_name}}</h6>
+                      </div>
+                  </div>
+                  <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row  px-md-3 px-xl-4 rounded mt-3">
+                      <div class="w-50">
+                          <h6 class="mb-1">WEBSITE URL</h6>
+                      </div>
+                      <div class=" flex-grow text-left  py-md-2 py-xl-0 mx-5">
+                          <h6 class="text-muted mb-0">{{client.bs_website}}</h6>
+                      </div>
+                  </div>
+                  <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row  px-md-3 px-xl-4 rounded mt-3">
+                    <div class="w-50">
+                        <h6 class="mb-1">LOCATION</h6> 
+                    </div>
+                    <div class=" flex-grow text-left py-md-2 py-xl-0 mx-5">
+                        <h6 class="text-muted mb-0">{{client.bs_location}}</h6>
+                    </div>
+                </div>
+          </div>
+      </div>
+      
+  </div>
+
+<div class="row mt-4">
+  <div class="card">
+    <div class="card-body">
+      <input type="text" class="form-control text-light" id="search" placeholder="search...">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col" style="color:#6C7293;">Task name</th>
+              <th scope="col" style="color:#6C7293;">Select TL</th>
+              <th scope="col" style="color:#6C7293;">StartDate</th>
+              <th scope="col" style="color:#6C7293;">EndDate</th>
+              <th scope="col" style="color:#6C7293;">Action</th>
+            </tr>
+          </thead>
+          <tbody id="myTable"> 
+
+            {% for t in tasks %}
+            {% if t.Tl_Id %}
+            <tr>
+              <form action="{% url 'he_edit_work_assign' t.id %}" method="post">{% csrf_token %}
+            <td style="color:white;" data-bs-toggle="modal" data-bs-target="#wrk{{t.id}}" id="tsk" >{{t.Task_head}}</td>
+            
+            <td style="color:white;">
+              <select class="form-control" name="tl" id="tl_name">
+                <option class="text-white" value="">Select Team Lead</option>
+                <option class="text-white" value="{{ t.Tl_Id_id }}" selected>{{t.Tl_Id.fullname}}</option>
+                {% for tl in tls %}
+                <option class="text-white" value="{{ tl.id }}">{{tl.fullname}}</option>
+                {% endfor %}
+              </select>       
+  
+            </td>  
+            <td style="display: none;"><input type="number" name="client_id" value="{{client.id}}"></td>
+            <td><input class="form-control" type="date" name="d1" id="sdate1" value="{{ t.Task_start_date|date:'Y-m-d' }}"></td>
+            <td><input class="form-control" type="date" name="d2" id="edate1" value="{{ t.Task_end_date|date:'Y-m-d' }}"></td>
+            
+            <td><button class="btn btn-outline-success" id="btn1" onclick="alert('Work Assign Updated!')" >EDIT</button></td>
+           
+
+            </form>
+            </tr>
+            {% else %}
+            <tr>
+              <form action="{% url 'he_work_add' t.id %}" method="post">{% csrf_token %}
+            <td style="color:white;" data-bs-toggle="modal" data-bs-target="#wrk{{t.id}}" id="tsk" >{{t.Task_head}}</td>
+            
+            <td style="color:white;">
+              <select class="form-control" name="tl" id="tl_name">
+                <option class="text-white" value="">Select Team Lead</option>
+                {% for tl in tls %}
+                <option class="text-white" value="{{ tl.id }}">{{tl.fullname}}</option>
+                {% endfor %}
+              </select>       
+  
+            </td>  
+            <td style="display: none;"><input type="number" name="client_id" value="{{client.id}}"></td>
+            <td><input class="form-control" type="date" name="d1" id="sdate1" ></td>
+            <td><input class="form-control" type="date" name="d2" id="edate1"></td>
+            
+            <td><button class="btn btn-outline-success" id="btn1" onclick="alert('Work Assigned!')">SUBMIT</button></td>
+           
+
+            </form>
+            </tr>
+            {% endif %}
+            {% endfor %}
+            </tbody>
+            </table>
+            </div>
+            </div>
+          </div>
+        </div>
+        
+
+{% for t in tasks %}
+<div class="rowmt-5 hidden modal fade " id="wrk{{t.id}}">
+<div class="modal-dialog bd-example-modal-xl modal-dialog-centered" role="document" tabindex="-1" role="dialog"
+aria-labelledby="myLargeModalLabel" aria-hidden="true" >
+<div class="modal-content modal-xl" style="background-color: #191c24;">
+    <div class="card ">
+    <div class="card-body">
+    <button type="button" class="close text-light" data-bs-dismiss="modal" aria-label=""
+      style="background-color: #191c24;border:none;float: right;font-size: 20px;">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <!-- <form action="" method="post" class="needs-validation" novalidate autocomplete="off" id="modalUpdateTask">{% csrf_token %} -->
+    <div class="text-info" style="font-size: 20px;font-weight: 600;">ABOUT WORK</div>
+    
+    <input type="number" style="display: none;" class="drop form-control ml-3 mt-2 text-light" name="t_id" value="{{t.id}}" id="t_id">
+      <div class="row pt-1">
+        <div class="col-md-4">
+          <div class="mr-2 ml-3 mt-2 text-light" style="color:white;">Description</div>
+        </div>
+        <div class="col">
+          <textarea class="form-control ml-3 mt-2" name="a" rows="8" cols="100" style="height: 100%;" name="des" id="des">{{t.Task_txt}}</textarea>
+        </div>
+        <div class="row mt-2" >
+          <div class="col-md-4">
+            <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Target</div>
+          </div>
+          <div class="col-md-8">
+            <input type="number" class="drop form-control ml-3 mt-2 text-light" value="{{t.Task_target}}" id="trgt" name="targt">
+          </div>
+        </div> 
+        <div class="row mt-5">
+          <div class="col-md-4">
+            <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Download File</div>
+          </div>
+          <div class="col-md-8 ">
+            <button  class="ml-3 mt-2 btn btn-outline-success" style="width:100%;">
+              {% if t.Task_file %}
+              <a href="{{t.Task_file.url}}" download style="text-decoration:none;" class="text-success">
+                DOWMLOAD</a>
+                {% else  %}
+                <a href=""  style="text-decoration:none;" class="text-success" download>No File Attached</a>
+                {% endif %}
+
+              </button>
+          </div>
+        </div>
+        <div class="row mt-5">
+          <div class="col-md-4">
+            <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;">Upload File</div>
+          </div>
+          <div class="col-md-8 ">
+            <input type="file" name="file" class="drop form-control ml-3 mt-2" required id="fl">
+          </div>
+          
+        </div>
+        <button class="btn btn-outline-success my-5"
+                  type="submit" data-dismiss="modal" id="update_task" onclick="alert('Task updated!')">EDIT
+                  </button> 
+
+        
+      </div>
+
+    </div>
+    </div>
+</form>
+</div>
+</div>
+</div>
+{% endfor %} 
+
+
+<script>
+  $(document).on("click","#update_task",function(){
+    console.log('update');
+  $.ajax({
+    
+    type : 'POST',
+    url:"{% url 'he_update_task' %}",
+
+    data:{
+        tid : $("#t_id").val(),
+        des : $("#des").val(),
+        target : $("#trgt").val(),
+        file : $("#fl").val(),
+        csrfmiddlewaretoken: '{{ csrf_token }}'
+        
+      },
+    
+      success: function(response) {
+          console.log(response)
+          // $('.modal').modal('hide');
+      },
+  });        
+});
+</script>
+<script>
+  $(document).ready(function () {
+  $("#search").on("keyup", function () {
+  var value = $(this).val().toLowerCase();
+  $("#myTable tr").filter(function () {
+  $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+  });
+  });
+  });
+</script>
+
+{% endblock %}
+
+
+{% for t in tasks %}
+{% if t.Task_head == 'Onpage SEO' %}
+<tr>
+  <form action="" method="post">{% csrf_token %}
+<td style="color:white;" data-bs-toggle="modal" data-bs-target="#wrk_1" id="tsk1" class="wrk_1"
+data-tsk-txt="{{ t.Task_txt }}" data-tsk-file="{{ t.Task_file.url }}" data-tsk-target="{{ t.Task_target }}">{{t.Task_head}}</td>
+
+<td style="color:white;">
+  <select class="form-control" name="tl1" id="tl_name1">
+    <option class="text-white" value="">Select Team Lead</option>
+    {% for tl in tls %}
+    <option class="text-white" value="{{ tl.id }}">{{tl.fullname}}</option>
+    {% endfor %}
+  </select>       
+
+</td>  
+<td><input class="form-control" type="date" name="d1" id="sdate1" ></td>
+<td><input class="form-control" type="date" name="d2" id="edate1"></td>
+
+<td><button class="btn btn-outline-success" id="btn1">SUBMIT</button></td>
+</form>
+</tr>
+{% endif %}
+
+{% if t.Task_head == 'SMM' %}
+    <tr>
+      <form action="" method="post">{% csrf_token %}
+    <td style="color:white;" data-bs-toggle="modal" data-bs-target="#wrk_2" id="tsk2" class="wrk_2"
+    data-tsk-txt="{{ t.Task_txt }}" data-tsk-file="{{ t.Task_file.url }}" data-tsk-target="{{ t.Task_target }}">{{t.Task_head}}</td>
+    <td style="display: none;"><input  class="form-control" type="number" name="id" id="id2">{{t.id}}</td>
+    <td style="color:white;">
+      <select class="form-control" name="tl2" id="tl_name2">
+        <option class="text-white" value="">Select Team Lead</option>
+        {% for tl in tls %}
+        <option class="text-white" value="{{ tl.id }}">{{tl.fullname}}</option>
+        {% endfor %}
+      </select> 
+        <!-- <input value="SELECT TEAM LEAD" class="form-control"  data-bs-toggle="modal" data-bs-target="#select_tl_2" type="button"> -->
+    </td>  
+    <td><input class="form-control" type="date" name="d1" id="sdate2"></td>
+    <td><input class="form-control" type="date" name="d2" id="edate2"></td>
+    <td><button class="btn btn-outline-success" id="btn2">SUBMIT</button></td>
+    </form>
+    </tr>
+{% endif %}  
+{% if t.Task_head == 'SEM/PPC' %}
+    <tr>
+      <form action="" method="post">{% csrf_token %}
+    <td style="color:white;" data-bs-toggle="modal" data-bs-target="#wrk_3" id="tsk3" class="wrk_3"
+    data-tsk-txt="{{ t.Task_txt }}" data-tsk-file="{{ t.Task_file.url }}" data-tsk-target="{{ t.Task_target }}">{{t.Task_head}}</td>
+   
+    <td style="color:white;">
+      <select class="form-control" name="tl3" id="tl_name3">
+        <option class="text-white" value="">Select Team Lead</option>
+        {% for tl in tls %}
+        <option class="text-white" value="{{ tl.id }}">{{tl.fullname}}</option>
+        {% endfor %}
+      </select> 
+        <!-- <input value="SELECT TEAM LEAD" class="form-control"  data-bs-toggle="modal" data-bs-target="#select_tl_3" type="button"> -->
+    </td>  
+    <td><input class="form-control" type="date" name="d1" id="sdate3"></td>
+    <td><input class="form-control" type="date" name="d2" id="edate3"></td>
+    <td><button class="btn btn-outline-success" id="btn3">SUBMIT</button></td>
+    </form>
+    </tr>
+{% endif %}  
+{% if t.Task_head == 'Email Marketing' %}
+    <tr>
+      <form action="" method="post">{% csrf_token %}
+    <td style="color:white;" data-bs-toggle="modal" data-bs-target="#wrk_4" id="tsk4" class="wrk_4"
+    data-tsk-txt="{{ t.Task_txt }}" data-tsk-file="{{ t.Task_file.url }}" data-tsk-target="{{ t.Task_target }}">{{t.Task_head}}</td>
+   
+    <td style="color:white;">
+      <select class="form-control" name="tl4" id="tl_name4">
+        <option class="text-white" value="">Select Team Lead</option>
+        {% for tl in tls %}
+        <option class="text-white" value="{{ tl.id }}">{{tl.fullname}}</option>
+        {% endfor %}
+      </select> 
+        <!-- <input value="SELECT TEAM LEAD" class="form-control"  data-bs-toggle="modal" data-bs-target="#select_tl_4" type="button"> -->
+    </td>  
+    <td><input class="form-control" type="date" name="d1" id="sdate4"></td>
+    <td><input class="form-control" type="date" name="d2" id="edate4"></td>
+    <td><button class="btn btn-outline-success" id="btn4">SUBMIT</button></td>
+    </form>
+    </tr>
+{% endif %}  
+{% if t.Task_head == 'Content Marketing' %}
+    <tr>
+      <form action="" method="post">{% csrf_token %}
+    <td style="color:white;" data-bs-toggle="modal" data-bs-target="#wrk_5" id="tsk5" class="wrk_5"
+    data-tsk-txt="{{ t.Task_txt }}" data-tsk-file="{{ t.Task_file.url }}" data-tsk-target="{{ t.Task_target }}">{{t.Task_head}}</td>
+   
+    <td style="color:white;">
+      <select class="form-control" name="tl5" id="tl_name5">
+        <option class="text-white" value="">Select Team Lead</option>
+        {% for tl in tls %}
+        <option class="text-white" value="{{ tl.id }}">{{tl.fullname}}</option>
+        {% endfor %}
+      </select> 
+        <!-- <input value="SELECT TEAM LEAD" class="form-control"  data-bs-toggle="modal" data-bs-target="#select_tl_5" type="button"> -->
+    </td>  
+    <td><input class="form-control" type="date" name="d1" id="sdate5"></td>
+    <td><input class="form-control" type="date" name="d2" id="edate5"></td>
+    <td><button class="btn btn-outline-success" id="btn5">SUBMIT</button></td>
+    </form>
+    </tr>
+{% endif %}  
+{% if t.Task_head == 'Affiliate Marketing' %}
+    <tr>
+      <form action="" method="post">{% csrf_token %}
+    <td style="color:white;" data-bs-toggle="modal" data-bs-target="#wrk_6" id="tsk6" class="wrk_6"
+    data-tsk-txt="{{ t.Task_txt }}" data-tsk-file="{{ t.Task_file.url }}" data-tsk-target="{{ t.Task_target }}">{{t.Task_head}}</td>
+   
+    <td style="color:white;">
+      <select class="form-control" name="tl6" id="tl_name6">
+        <option class="text-white" value="">Select Team Lead</option>
+        {% for tl in tls %}
+        <option class="text-white" value="{{ tl.id }}">{{tl.fullname}}</option>
+        {% endfor %}
+      </select> 
+        <input value="SELECT TEAM LEAD" class="form-control"  data-bs-toggle="modal" data-bs-target="#select_tl_6" type="button">
+    </td>  
+    <td><input class="form-control" type="date" name="d1" id="sdate6"></td>
+    <td><input class="form-control" type="date" name="d2" id="edate6"></td>
+    <td><button class="btn btn-outline-success" id="btn6">SUBMIT</button></td>
+    </form>
+    </tr>
+{% endif %}  
+{% if t.Task_head == 'Mobile marketing' %}
+    <tr>
+      <form action="" method="post">{% csrf_token %}
+    <td style="color:white;" data-bs-toggle="modal" data-bs-target="#wrk_7" id="tsk7" class="wrk_7"
+    data-tsk-txt="{{ t.Task_txt }}" data-tsk-file="{{ t.Task_file.url }}" data-tsk-target="{{ t.Task_target }}">{{t.Task_head}}</td>
+   
+    <td style="color:white;">
+      <select class="form-control" name="tl7" id="tl_name7">
+        <option class="text-white" value="">Select Team Lead</option>
+        {% for tl in tls %}
+        <option class="text-white" value="{{ tl.id }}">{{tl.fullname}}</option>
+        {% endfor %}
+      </select> 
+        <!-- <input value="SELECT TEAM LEAD" class="form-control"  data-bs-toggle="modal" data-bs-target="#select_tl_7" type="button"> -->
+    </td>  
+    <td><input class="form-control" type="date" name="d1" id="sdate7"></td>
+    <td><input class="form-control" type="date" name="d2" id="edate7"></td>
+    <td><button class="btn btn-outline-success" id="btn7">SUBMIT</button></td>
+    </form>
+    </tr>
+{% endif %}  
+{% if t.Task_head == 'Video Marketing' %}
+    <tr>
+      <form action="" method="post">{% csrf_token %}
+    <td style="color:white;" data-bs-toggle="modal" data-bs-target="#wrk_8" id="tsk8" class="wrk_8"
+    data-tsk-txt="{{ t.Task_txt }}" data-tsk-file="{{ t.Task_file.url }}" data-tsk-target="{{ t.Task_target }}">{{t.Task_head}}</td>
+   
+    <td style="color:white;">
+      <select class="form-control" name="tl8" id="tl_name8">
+        <option class="text-white" value="">Select Team Lead</option>
+        {% for tl in tls %}
+        <option class="text-white" value="{{ tl.id }}">{{tl.fullname}}</option>
+        {% endfor %}
+      </select> 
+        <!-- <input value="SELECT TEAM LEAD" class="form-control"  data-bs-toggle="modal" data-bs-target="#select_tl_8" type="button"> -->
+    </td>  
+    <td><input class="form-control" type="date" name="d1" id="sdate8"></td>
+    <td><input class="form-control" type="date" name="d2" id="edate8"></td>
+    <td><button class="btn btn-outline-success" id="btn8">SUBMIT</button></td>
+    </form>
+    </tr>
+{% endif %}  
+{% if t.Task_head == 'SMO' %}
+    <tr>
+      <form action="" method="post">{% csrf_token %}
+    <td style="color:white;" data-bs-toggle="modal" data-bs-target="#wrk_9" id="tsk9" class="wrk_9"
+    data-tsk-txt="{{ t.Task_txt }}" data-tsk-file="{{ t.Task_file.url }}" data-tsk-target="{{ t.Task_target }}">{{t.Task_head}}</td>
+   
+    <td style="color:white;">
+      <select class="form-control" name="tl9" id="tl_name9">
+        <option class="text-white" value="">Select Team Lead</option>
+        {% for tl in tls %}
+        <option class="text-white" value="{{ tl.id }}">{{tl.fullname}}</option>
+        {% endfor %}
+      </select> 
+        <!-- <input value="SELECT TEAM LEAD" class="form-control"  data-bs-toggle="modal" data-bs-target="#select_tl_9" type="button"> -->
+    </td>  
+    <td><input class="form-control" type="date" name="d1" id="sdate9"></td>
+    <td><input class="form-control" type="date" name="d2" id="edate9"></td>
+    <td><button class="btn btn-outline-success" id="btn9">SUBMIT</button></td>
+    </form>
+    </tr>
+{% endif %}  
+{% if t.Task_head == 'Leads Collection' %}
+    <tr>
+      <form action="" method="post">{% csrf_token %}
+    <td style="color:white;" data-bs-toggle="modal" data-bs-target="#wrk_10" id="tsk10" class="wrk_10"
+    data-tsk-txt="{{ t.Task_txt }}" data-tsk-file="{{ t.Task_file.url }}" data-tsk-target="{{ t.Task_target }}">{{t.Task_head}}</td>
+   
+    <td style="color:white;">
+      <select class="form-control" name="tl10" id="tl_name10">
+        <option class="text-white" value="">Select Team Lead</option>
+        {% for tl in tls %}
+        <option class="text-white" value="{{ tl.id }}">{{tl.fullname}}</option>
+        {% endfor %}
+      </select> 
+        <!-- <input value="SELECT TEAM LEAD" class="form-control"  data-bs-toggle="modal" data-bs-target="#select_tl_10" type="button"> -->
+    </td>  
+    <td><input class="form-control" type="date" name="d1" id="sdate10"></td>
+    <td><input class="form-control" type="date" name="d2" id="edate10"></td>
+    <td><button class="btn btn-outline-success" id="btn10">SUBMIT</button></td>
+    </form>
+    </tr>
+{% endif %} 
+
+{% if t.Task_head == 'Offpage SEO' %}
+<tr>
+  <form action="" method="post">{% csrf_token %}
+<td style="color:white;" data-bs-toggle="modal" data-bs-target="#wrk_11" id="tsk11" class="wrk_11"
+data-tsk-txt="{{ t.Task_txt }}" data-tsk-file="{{ t.Task_file.url }}" data-tsk-target="{{ t.Task_target }}">{{t.Task_head}}</td>
+
+<td style="color:white;">
+  <select class="form-control" name="tl11" id="tl_name11">
+    <option class="text-white" value="">Select Team Lead</option>
+    {% for tl in tls %}
+    <option class="text-white" value="{{ tl.id }}">{{tl.fullname}}</option>
+    {% endfor %}
+  </select>       
+
+</td> 
+<td><input class="form-control" type="date" name="d1" id="sdate11" ></td>
+<td><input class="form-control" type="date" name="d2" id="edate11"></td>
+
+<td><button class="btn btn-outline-success" id="btn11">SUBMIT</button></td>
+</form>
+</tr>
+{% endif %}
+{% endfor %} 
+</tbody>
+</table>
+</div>
+
+</div>
+</div>
+</div>
+
+<!-- task details modal -->
+
+<!-- {% for t in tasks %}
+<div class="rowmt-5 hidden modal fade" id="wrk{{t.id}}">
+<div class="modal-dialog bd-example-modal-xl modal-dialog-centered" role="document" tabindex="-1" role="dialog"
+aria-labelledby="myLargeModalLabel" aria-hidden="true" >
+<div class="modal-content modal-xl" style="background-color: #191c24;">
+<div class="card ">
+<div class="card-body">
+<button type="button" class="close text-light" data-bs-dismiss="modal" aria-label=""
+  style="background-color: #191c24;border:none;float: right;font-size: 20px;">
+  <span aria-hidden="true">&times;</span>
+</button>
+<div class="text-info" style="font-size: 20px;font-weight: 600;">ABOUT WORK</div>
+
+  <div class="row pt-1">
+    <div class="col-md-4">
+      <div class="mr-2 ml-3 mt-2 text-light" style="color:white;">Description</div>
+    </div>
+    <div class="col">
+      <textarea class="form-control ml-3 mt-2" name="a" rows="8" cols="100" style="height: 100%;" id="des">{{t.Task_txt}}</textarea>
+    </div>
+    <div class="row mt-2" >
+      <div class="col-md-4">
+        <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Target</div>
+      </div>
+      <div class="col-md-8">
+        <input type="number" class="drop form-control ml-3 mt-2 text-light" value="{{t.Task_target}}" id="trgt">
+      </div>
+    </div> 
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Download File</div>
+      </div>
+      <div class="col-md-8 ">
+        <button  class="ml-3 mt-2 btn btn-outline-success" style="width:100%;">
+          {% if client.am_file %}
+          <a href="{{t.Task_file.url}}" download style="text-decoration:none;" class="text-success">
+            DOWMLOAD</a>
+            {% else  %}
+            <a href=""  style="text-decoration:none;" class="text-success" download>No File Attached</a>
+            {% endif %}
+
+          </button>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;">Upload File</div>
+      </div>
+      <div class="col-md-8 ">
+        <input type="file" name="file" class="drop form-control ml-3 mt-2" required id="fl">
+      </div>
+      
+    </div>
+  </div>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+{% endfor %} -->
+
+<div class="rowmt-5 hidden modal fade" id="wrk_1">
+<div class="modal-dialog bd-example-modal-xl modal-dialog-centered" role="document" tabindex="-1" role="dialog"
+aria-labelledby="myLargeModalLabel" aria-hidden="true" >
+<div class="modal-content modal-xl" style="background-color: #191c24;">
+<div class="card ">
+<div class="card-body">
+<button type="button" class="close text-light" data-bs-dismiss="modal" aria-label=""
+  style="background-color: #191c24;border:none;float: right;font-size: 20px;">
+  <span aria-hidden="true">&times;</span>
+</button>
+<div class="text-info" style="font-size: 20px;font-weight: 600;">ABOUT WORK</div>
+
+
+<div class="row pt-1">
+  <div class="col-md-4">
+    <div class="mr-2 ml-3 mt-2 text-light" style="color:white;">Description</div>
+  </div>
+  <div class="col">
+    <textarea class="form-control ml-3 mt-2" name="a" rows="8" cols="100" style="height: 100%;" id="des1"></textarea>
+  </div>
+  <div class="row mt-2" >
+    <div class="col-md-4">
+      <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Target</div>
+    </div>
+    <div class="col-md-8">
+      <input type="number" class="drop form-control ml-3 mt-2 text-light"  id="trgt1">
+    </div>
+  </div> 
+  <div class="row mt-5">
+    <div class="col-md-4">
+      <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Download File</div>
+    </div>
+    <div class="col-md-8 ">
+      <button  class="ml-3 mt-2 btn btn-outline-success" style="width:100%;">
+        <a href="" download style="text-decoration:none;" class="text-success" id="downloadLink1">
+          DOWMLOAD</a>
+
+        </button>
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-4">
+      <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;">Upload File</div>
+    </div>
+    <div class="col-md-8 ">
+      <input type="file" name="file" class="drop form-control ml-3 mt-2" required id="fl1">
+    </div>
+    </div> 
+  </div>
+</div> 
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="rowmt-5 hidden modal fade" id="wrk_2">
+<div class="modal-dialog bd-example-modal-xl modal-dialog-centered" role="document" tabindex="-1" role="dialog"
+aria-labelledby="myLargeModalLabel" aria-hidden="true" >
+<div class="modal-content modal-xl" style="background-color: #191c24;">
+<div class="card ">
+<div class="card-body">
+<button type="button" class="close text-light" data-bs-dismiss="modal" aria-label=""
+  style="background-color: #191c24;border:none;float: right;font-size: 20px;">
+  <span aria-hidden="true">&times;</span>
+</button>
+<div class="text-info" style="font-size: 20px;font-weight: 600;">ABOUT WORK</div>
+
+  <div class="row pt-1">
+    <div class="col-md-4">
+      <div class="mr-2 ml-3 mt-2 text-light" style="color:white;">Description</div>
+    </div>
+    <div class="col">
+      <textarea class="form-control ml-3 mt-2" name="a" rows="8" cols="100" style="height: 100%;" id="des2"></textarea>
+    </div>
+    <div class="row mt-2" >
+      <div class="col-md-4">
+        <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Target</div>
+      </div>
+      <div class="col-md-8">
+        <input type="number" class="drop form-control ml-3 mt-2 text-light"  id="trgt2">
+      </div>
+    </div> 
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Download File</div>
+      </div>
+      <div class="col-md-8 ">
+        <button  class="ml-3 mt-2 btn btn-outline-success" style="width:100%;">
+          <a href="" download style="text-decoration:none;" class="text-success" id="downloadLink2">
+            DOWMLOAD</a>
+
+          </button>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;">Upload File</div>
+      </div>
+      <div class="col-md-8 ">
+        <input type="file" name="file" class="drop form-control ml-3 mt-2" required id="fl2">
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="rowmt-5 hidden modal fade" id="wrk_3">
+<div class="modal-dialog bd-example-modal-xl modal-dialog-centered" role="document" tabindex="-1" role="dialog"
+aria-labelledby="myLargeModalLabel" aria-hidden="true" >
+<div class="modal-content modal-xl" style="background-color: #191c24;">
+<div class="card ">
+<div class="card-body">
+<button type="button" class="close text-light" data-bs-dismiss="modal" aria-label=""
+  style="background-color: #191c24;border:none;float: right;font-size: 20px;">
+  <span aria-hidden="true">&times;</span>
+</button>
+<div class="text-info" style="font-size: 20px;font-weight: 600;">ABOUT WORK</div>
+  <div class="row pt-1">
+    <div class="col-md-4">
+      <div class="mr-2 ml-3 mt-2 text-light" style="color:white;">Description</div>
+    </div>
+    <div class="col">
+      <textarea class="form-control ml-3 mt-2" name="a" rows="8" cols="100" style="height: 100%;" id="des3"></textarea>
+    </div>
+    <div class="row mt-2" >
+      <div class="col-md-4">
+        <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Target</div>
+      </div>
+      <div class="col-md-8">
+        <input type="number" class="drop form-control ml-3 mt-2 text-light"  id="trgt3">
+      </div>
+    </div> 
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Download File</div>
+      </div>
+      <div class="col-md-8 ">
+        <button  class="ml-3 mt-2 btn btn-outline-success" style="width:100%;">
+          <a href="" download style="text-decoration:none;" class="text-success" id="downloadLink3">
+            DOWMLOAD</a>
+
+          </button>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;">Upload File</div>
+      </div>
+      <div class="col-md-8 ">
+        <input type="file" name="file" class="drop form-control ml-3 mt-2" required id="fl3" v>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="rowmt-5 hidden modal fade" id="wrk_4">
+<div class="modal-dialog bd-example-modal-xl modal-dialog-centered" role="document" tabindex="-1" role="dialog"
+aria-labelledby="myLargeModalLabel" aria-hidden="true" >
+<div class="modal-content modal-xl" style="background-color: #191c24;">
+<div class="card ">
+<div class="card-body">
+<button type="button" class="close text-light" data-bs-dismiss="modal" aria-label=""
+  style="background-color: #191c24;border:none;float: right;font-size: 20px;">
+  <span aria-hidden="true">&times;</span>
+</button>
+<div class="text-info" style="font-size: 20px;font-weight: 600;">ABOUT WORK</div>
+
+  <div class="row pt-1">
+    <div class="col-md-4">
+      <div class="mr-2 ml-3 mt-2 text-light" style="color:white;">Description</div>
+    </div>
+    <div class="col">
+      <textarea class="form-control ml-3 mt-2" name="a" rows="8" cols="100" style="height: 100%;" id="des4"></textarea>
+    </div>
+    <div class="row mt-2" >
+      <div class="col-md-4">
+        <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Target</div>
+      </div>
+      <div class="col-md-8">
+        <input type="number" class="drop form-control ml-3 mt-2 text-light"  id="trgt4">
+      </div>
+    </div> 
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Download File</div>
+      </div>
+      <div class="col-md-8 ">
+        <button  class="ml-3 mt-2 btn btn-outline-success" style="width:100%;">
+          <a href="" download style="text-decoration:none;" class="text-success" id="downloadLink4">
+            DOWMLOAD</a>
+
+          </button>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;">Upload File</div>
+      </div>
+      <div class="col-md-8 ">
+        <input type="file" name="file" class="drop form-control ml-3 mt-2" required id="fl4">
+      </div>
+      
+    </div>
+  </div>
+</form>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="rowmt-5 hidden modal fade" id="wrk_5">
+<div class="modal-dialog bd-example-modal-xl modal-dialog-centered" role="document" tabindex="-1" role="dialog"
+aria-labelledby="myLargeModalLabel" aria-hidden="true" >
+<div class="modal-content modal-xl" style="background-color: #191c24;">
+<div class="card ">
+<div class="card-body">
+<button type="button" class="close text-light" data-bs-dismiss="modal" aria-label=""
+  style="background-color: #191c24;border:none;float: right;font-size: 20px;">
+  <span aria-hidden="true">&times;</span>
+</button>
+<div class="text-info" style="font-size: 20px;font-weight: 600;">ABOUT WORK</div>
+  <div class="row pt-1">
+    <div class="col-md-4">
+      <div class="mr-2 ml-3 mt-2 text-light" style="color:white;">Description</div>
+    </div>
+    <div class="col">
+      <textarea class="form-control ml-3 mt-2" name="a" rows="8" cols="100" style="height: 100%;" id="des5"></textarea>
+    </div>
+    <div class="row mt-2" >
+      <div class="col-md-4">
+        <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Target</div>
+      </div>
+      <div class="col-md-8">
+        <input type="number" class="drop form-control ml-3 mt-2 text-light" id="trgt5">
+      </div>
+    </div> 
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Download File</div>
+      </div>
+      <div class="col-md-8 ">
+        <button  class="ml-3 mt-2 btn btn-outline-success" style="width:100%;">
+          <a href="" download style="text-decoration:none;" class="text-success" id="downloadLink5">
+            DOWMLOAD</a>
+
+          </button>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;">Upload File</div>
+      </div>
+      <div class="col-md-8 ">
+        <input type="file" name="file" class="drop form-control ml-3 mt-2" required id="fl5">
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="rowmt-5 hidden modal fade" id="wrk_6">
+<div class="modal-dialog bd-example-modal-xl modal-dialog-centered" role="document" tabindex="-1" role="dialog"
+aria-labelledby="myLargeModalLabel" aria-hidden="true" >
+<div class="modal-content modal-xl" style="background-color: #191c24;">
+<div class="card ">
+<div class="card-body">
+<button type="button" class="close text-light" data-bs-dismiss="modal" aria-label=""
+  style="background-color: #191c24;border:none;float: right;font-size: 20px;">
+  <span aria-hidden="true">&times;</span>
+</button>
+<div class="text-info" style="font-size: 20px;font-weight: 600;">ABOUT WORK</div>
+
+  <div class="row pt-1">
+    <div class="col-md-4">
+      <div class="mr-2 ml-3 mt-2 text-light" style="color:white;">Description</div>
+    </div>
+    <div class="col">
+      <textarea class="form-control ml-3 mt-2" name="a" rows="8" cols="100" style="height: 100%;" id="des6"></textarea>
+    </div>
+    <div class="row mt-2" >
+      <div class="col-md-4">
+        <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Target</div>
+      </div>
+      <div class="col-md-8">
+        <input type="number" class="drop form-control ml-3 mt-2 text-light" id="trgt6">
+      </div>
+    </div> 
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Download File</div>
+      </div>
+      <div class="col-md-8 ">
+        <button  class="ml-3 mt-2 btn btn-outline-success" style="width:100%;">
+          <a href="" download style="text-decoration:none;" class="text-success" id="downloadLink6">
+            DOWMLOAD</a>
+
+          </button>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;">Upload File</div>
+      </div>
+      <div class="col-md-8 ">
+        <input type="file" name="file" class="drop form-control ml-3 mt-2" required id="fl6">
+      </div>
+      
+    </div>
+  </div>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="rowmt-5 hidden modal fade" id="wrk_7">
+<div class="modal-dialog bd-example-modal-xl modal-dialog-centered" role="document" tabindex="-1" role="dialog"
+aria-labelledby="myLargeModalLabel" aria-hidden="true" >
+<div class="modal-content modal-xl" style="background-color: #191c24;">
+<div class="card ">
+<div class="card-body">
+<button type="button" class="close text-light" data-bs-dismiss="modal" aria-label=""
+  style="background-color: #191c24;border:none;float: right;font-size: 20px;">
+  <span aria-hidden="true">&times;</span>
+</button>
+<div class="text-info" style="font-size: 20px;font-weight: 600;">ABOUT WORK</div>
+
+  <div class="row pt-1">
+    <div class="col-md-4">
+      <div class="mr-2 ml-3 mt-2 text-light" style="color:white;">Description</div>
+    </div>
+    <div class="col">
+      <textarea class="form-control ml-3 mt-2" name="a" rows="8" cols="100" style="height: 100%;" id="des7"></textarea>
+    </div>
+    <div class="row mt-2" >
+      <div class="col-md-4">
+        <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Target</div>
+      </div>
+      <div class="col-md-8">
+        <input type="number" class="drop form-control ml-3 mt-2 text-light"  id="trgt7">
+      </div>
+    </div> 
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Download File</div>
+      </div>
+      <div class="col-md-8 ">
+        <button  class="ml-3 mt-2 btn btn-outline-success" style="width:100%;">
+          <a href="" download style="text-decoration:none;" class="text-success" id="downloadLink7">
+            DOWMLOAD</a>
+
+          </button>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;">Upload File</div>
+      </div>
+      <div class="col-md-8 ">
+        <input type="file" name="file" class="drop form-control ml-3 mt-2" required id="fl7">
+      </div> 
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="rowmt-5 hidden modal fade" id="wrk_8">
+<div class="modal-dialog bd-example-modal-xl modal-dialog-centered" role="document" tabindex="-1" role="dialog"
+aria-labelledby="myLargeModalLabel" aria-hidden="true" >
+<div class="modal-content modal-xl" style="background-color: #191c24;">
+<div class="card ">
+<div class="card-body">
+<button type="button" class="close text-light" data-bs-dismiss="modal" aria-label=""
+  style="background-color: #191c24;border:none;float: right;font-size: 20px;">
+  <span aria-hidden="true">&times;</span>
+</button>
+<div class="text-info" style="font-size: 20px;font-weight: 600;">ABOUT WORK</div>
+
+  <div class="row pt-1">
+    <div class="col-md-4">
+      <div class="mr-2 ml-3 mt-2 text-light" style="color:white;">Description</div>
+    </div>
+    <div class="col">
+      <textarea class="form-control ml-3 mt-2" name="a" rows="8" cols="100" style="height: 100%;" id="des8"></textarea>
+    </div>
+    <div class="row mt-2" >
+      <div class="col-md-4">
+        <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Target</div>
+      </div>
+      <div class="col-md-8">
+        <input type="number" class="drop form-control ml-3 mt-2 text-light"  id="trgt8">
+      </div>
+    </div> 
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Download File</div>
+      </div>
+      <div class="col-md-8 ">
+        <button  class="ml-3 mt-2 btn btn-outline-success" style="width:100%;">
+          <a href="" download style="text-decoration:none;" class="text-success" id="downloadLink8">
+            DOWMLOAD</a>
+
+          </button>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;">Upload File</div>
+      </div>
+      <div class="col-md-8 ">
+        <input type="file" name="file" class="drop form-control ml-3 mt-2" required id="fl8">
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="rowmt-5 hidden modal fade" id="wrk_9">
+<div class="modal-dialog bd-example-modal-xl modal-dialog-centered" role="document" tabindex="-1" role="dialog"
+aria-labelledby="myLargeModalLabel" aria-hidden="true" >
+<div class="modal-content modal-xl" style="background-color: #191c24;">
+<div class="card ">
+<div class="card-body">
+<button type="button" class="close text-light" data-bs-dismiss="modal" aria-label=""
+  style="background-color: #191c24;border:none;float: right;font-size: 20px;">
+  <span aria-hidden="true">&times;</span>
+</button>
+<div class="text-info" style="font-size: 20px;font-weight: 600;">ABOUT WORK</div>
+
+  <div class="row pt-1">
+    <div class="col-md-4">
+      <div class="mr-2 ml-3 mt-2 text-light" style="color:white;">Description</div>
+    </div>
+    <div class="col">
+      <textarea class="form-control ml-3 mt-2" name="a" rows="8" cols="100" style="height: 100%;" id="des9"></textarea>
+    </div>
+    <div class="row mt-2" >
+      <div class="col-md-4">
+        <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Target</div>
+      </div>
+      <div class="col-md-8">
+        <input type="number" class="drop form-control ml-3 mt-2 text-light"  id="trgt9">
+      </div>
+    </div> 
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Download File</div>
+      </div>
+      <div class="col-md-8 ">
+        <button  class="ml-3 mt-2 btn btn-outline-success" style="width:100%;">
+          <a href="" download style="text-decoration:none;" class="text-success" id="downloadLink9">
+            DOWMLOAD</a>
+
+          </button>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;">Upload File</div>
+      </div>
+      <div class="col-md-8 ">
+        <input type="file" name="file" class="drop form-control ml-3 mt-2" required id="fl9">
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="rowmt-5 hidden modal fade" id="wrk_10">
+<div class="modal-dialog bd-example-modal-xl modal-dialog-centered" role="document" tabindex="-1" role="dialog"
+aria-labelledby="myLargeModalLabel" aria-hidden="true" >
+<div class="modal-content modal-xl" style="background-color: #191c24;">
+<div class="card ">
+<div class="card-body">
+<button type="button" class="close text-light" data-bs-dismiss="modal" aria-label=""
+  style="background-color: #191c24;border:none;float: right;font-size: 20px;">
+  <span aria-hidden="true">&times;</span>
+</button>
+<div class="text-info" style="font-size: 20px;font-weight: 600;">ABOUT WORK</div>
+
+  <div class="row pt-1">
+    <div class="col-md-4">
+      <div class="mr-2 ml-3 mt-2 text-light" style="color:white;">Description</div>
+    </div>
+    <div class="col">
+      <textarea class="form-control ml-3 mt-2" name="a" rows="8" cols="100" style="height: 100%;" id="des10"></textarea>
+    </div>
+    <div class="row mt-2" >
+      <div class="col-md-4">
+        <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Target</div>
+      </div>
+      <div class="col-md-8">
+        <input type="number" class="drop form-control ml-3 mt-2 text-light" id="trgt10">
+      </div>
+    </div> 
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Download File</div>
+      </div>
+      <div class="col-md-8 ">
+        <button  class="ml-3 mt-2 btn btn-outline-success" style="width:100%;">
+          <a href="" download style="text-decoration:none;" class="text-success" id="downloadLink10">
+            DOWMLOAD</a>
+
+          </button>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;">Upload File</div>
+      </div>
+      <div class="col-md-8 ">
+        <input type="file" name="file" class="drop form-control ml-3 mt-2" required id="fl10">
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="rowmt-5 hidden modal fade" id="wrk_11">
+<div class="modal-dialog bd-example-modal-xl modal-dialog-centered" role="document" tabindex="-1" role="dialog"
+aria-labelledby="myLargeModalLabel" aria-hidden="true" >
+<div class="modal-content modal-xl" style="background-color: #191c24;">
+<div class="card ">
+<div class="card-body">
+<button type="button" class="close text-light" data-bs-dismiss="modal" aria-label=""
+  style="background-color: #191c24;border:none;float: right;font-size: 20px;">
+  <span aria-hidden="true">&times;</span>
+</button>
+<div class="text-info" style="font-size: 20px;font-weight: 600;">ABOUT WORK</div>
+
+  <div class="row pt-1">
+    <div class="col-md-4">
+      <div class="mr-2 ml-3 mt-2 text-light" style="color:white;">Description</div>
+    </div>
+    <div class="col">
+      <textarea class="form-control ml-3 mt-2" name="a" rows="8" cols="100" style="height: 100%;" id="des11"></textarea>
+    </div>
+    <div class="row mt-2" >
+      <div class="col-md-4">
+        <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Target</div>
+      </div>
+      <div class="col-md-8">
+        <input type="number" class="drop form-control ml-3 mt-2 text-light" id="trgt11">
+      </div>
+    </div> 
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Download File</div>
+      </div>
+      <div class="col-md-8 ">
+        <button  class="ml-3 mt-2 btn btn-outline-success" style="width:100%;">
+          <a href="" download style="text-decoration:none;" class="text-success" id="downloadLink11">
+            DOWMLOAD</a>
+
+          </button>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-4">
+        <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;">Upload File</div>
+      </div>
+      <div class="col-md-8 ">
+        <input type="file" name="file" class="drop form-control ml-3 mt-2" required id="fl11">
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<script>
+
+$(document).on("click","#btn1",function(){
+
+var form_data = new FormData();
+var sel = $("input:radio[name='sub_tsk']:checked").val()
+form_data.append('task', $("#tsk1").text());
+form_data.append('des', $("#des1").val());
+form_data.append('tl_name', $("#tl_name1").val());
+form_data.append('sdate', $("#sdate1").val());
+form_data.append('edate', $("#edate1").val());
+form_data.append('trgt', $("#trgt1").val());
+// form_data.append('array', JSON.stringify(array));
+form_data.append('file', $('#fl1')[0].files[0]);
+
+
+
+$.ajax({
+url: "{% url 'he_work_add' client.id %}",
+type: 'POST',
+headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+data: form_data,
+processData: false,
+contentType: false,
+success: function(response) {
+if (response.message === 'success') {
+  
+}
+},
+error: function(jqXHR, textStatus, errorThrown) {
+console.log(textStatus, errorThrown);
+}
+});
+}
+
+
+    
+);
+$(document).on("click","#btn2",function(){
+var form_data = new FormData();
+// form_data.append('id', $("#id2").text());
+form_data.append('task', $("#tsk2").text());
+form_data.append('des', $("#des2").val());
+form_data.append('tl_name', $("#tl_name2").val());
+form_data.append('sdate', $("#sdate2").val());
+form_data.append('edate', $("#edate2").val());
+form_data.append('trgt', $("#trgt2").val());
+// form_data.append('array', JSON.stringify(array));
+form_data.append('file', $('#fl2')[0].files[0]);
+
+$.ajax({
+url: "{% url 'he_work_add' client.id %}",
+type: 'POST',
+headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+data: form_data,
+processData: false,
+contentType: false,
+success: function(response) {
+if (response.message === 'success') {
+  $('#modalForm')[0].reset();
+}
+},
+error: function(jqXHR, textStatus, errorThrown) {
+console.log(textStatus, errorThrown);
+}
+});
+}
+
+
+    
+);
+
+$(document).on("click","#btn3",function(){
+
+var form_data = new FormData();
+form_data.append('task', $("#tsk3").text());
+form_data.append('des', $("#des3").val());
+form_data.append('tl_name', $("#tl_name3").val());
+form_data.append('sdate', $("#sdate3").val());
+form_data.append('edate', $("#edate3").val());
+form_data.append('trgt', $("#trgt3").val());
+// form_data.append('array', JSON.stringify(array));
+form_data.append('file', $('#fl3')[0].files[0]);
+
+$.ajax({
+url: "{% url 'he_work_add' client.id %}",
+type: 'POST',
+headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+data: form_data,
+processData: false,
+contentType: false,
+success: function(response) {
+if (response.message === 'success') {
+  $('#modalForm')[0].reset();
+}
+},
+error: function(jqXHR, textStatus, errorThrown) {
+console.log(textStatus, errorThrown);
+}
+});
+}
+
+
+    
+);
+
+$(document).on("click","#btn4",function(){
+
+var form_data = new FormData();
+form_data.append('task', $("#tsk4").text());
+form_data.append('des', $("#des4").val());
+form_data.append('tl_name', $("#tl_name4").val());
+form_data.append('sdate', $("#sdate4").val());
+form_data.append('edate', $("#edate4").val());
+form_data.append('trgt', $("#trgt4").val());
+form_data.append('array', JSON.stringify(array));
+form_data.append('file', $('#fl4')[0].files[0]);
+
+$.ajax({
+url: "{% url 'he_work_add' client.id %}",
+type: 'POST',
+headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+data: form_data,
+processData: false,
+contentType: false,
+success: function(response) {
+if (response.message === 'success') {
+  $('#modalForm')[0].reset();
+}
+},
+error: function(jqXHR, textStatus, errorThrown) {
+console.log(textStatus, errorThrown);
+}
+});
+}
+
+
+    
+);
+$(document).on("click","#btn5",function(){
+
+var form_data = new FormData();
+form_data.append('task', $("#tsk5").text());
+form_data.append('des', $("#des5").val());
+form_data.append('tl_name', $("#tl_name5").val());
+form_data.append('sdate', $("#sdate5").val());
+form_data.append('edate', $("#edate5").val());
+form_data.append('trgt', $("#trgt5").val());
+// form_data.append('array', JSON.stringify(array));
+form_data.append('file', $('#fl5')[0].files[0]);
+
+$.ajax({
+url: "{% url 'he_work_add' client.id %}",
+type: 'POST',
+headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+data: form_data,
+processData: false,
+contentType: false,
+success: function(response) {
+if (response.message === 'success') {
+  $('#modalForm')[0].reset();
+}
+},
+error: function(jqXHR, textStatus, errorThrown) {
+console.log(textStatus, errorThrown);
+}
+});
+}
+
+
+    
+);
+$(document).on("click","#btn6",function(){
+
+var form_data = new FormData();
+form_data.append('task', $("#tsk6").text());
+form_data.append('des', $("#des6").val());
+form_data.append('tl_name', $("#tl_name6").val());
+form_data.append('sdate', $("#sdate6").val());
+form_data.append('edate', $("#edate6").val());
+form_data.append('trgt', $("#trgt6").val());
+// form_data.append('array', JSON.stringify(array));
+form_data.append('file', $('#fl6')[0].files[0]);
+
+$.ajax({
+url: "{% url 'he_work_add' client.id %}",
+type: 'POST',
+headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+data: form_data,
+processData: false,
+contentType: false,
+success: function(response) {
+if (response.message === 'success') {
+  $('#modalForm')[0].reset();
+}
+},
+error: function(jqXHR, textStatus, errorThrown) {
+console.log(textStatus, errorThrown);
+}
+});
+}
+
+
+    
+);
+$(document).on("click","#btn7",function(){
+
+var form_data = new FormData();
+form_data.append('task', $("#tsk7").text());
+form_data.append('des', $("#des7").val());
+form_data.append('tl_name', $("#tl_name7").val());
+form_data.append('sdate', $("#sdate7").val());
+form_data.append('edate', $("#edate7").val());
+form_data.append('trgt', $("#trgt7").val());
+// form_data.append('array', JSON.stringify(array));
+form_data.append('file', $('#fl7')[0].files[0]);
+
+$.ajax({
+url: "{% url 'he_work_add' client.id %}",
+type: 'POST',
+headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+data: form_data,
+processData: false,
+contentType: false,
+success: function(response) {
+if (response.message === 'success') {
+  $('#modalForm')[0].reset();
+}
+},
+error: function(jqXHR, textStatus, errorThrown) {
+console.log(textStatus, errorThrown);
+}
+});
+}
+
+
+    
+);
+$(document).on("click","#btn8",function(){
+
+var form_data = new FormData();
+form_data.append('task', $("#tsk8").text());
+form_data.append('des', $("#des8").val());
+form_data.append('tl_name', $("#tl_name8").val());
+form_data.append('sdate', $("#sdate8").val());
+form_data.append('edate', $("#edate8").val());
+form_data.append('trgt', $("#trgt8").val());
+// form_data.append('array', JSON.stringify(array));
+form_data.append('file', $('#fl8')[0].files[0]);
+
+$.ajax({
+url: "{% url 'he_work_add' client.id %}",
+type: 'POST',
+headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+data: form_data,
+processData: false,
+contentType: false,
+success: function(response) {
+if (response.message === 'success') {
+  $('#modalForm')[0].reset();
+}
+},
+error: function(jqXHR, textStatus, errorThrown) {
+console.log(textStatus, errorThrown);
+}
+});
+}
+
+
+    
+);
+$(document).on("click","#btn9",function(){
+var form_data = new FormData();
+form_data.append('task', $("#tsk9").text());
+form_data.append('des', $("#des9").val());
+form_data.append('tl_name', $("#tl_name9").val());
+form_data.append('sdate', $("#sdate9").val());
+form_data.append('edate', $("#edate9").val());
+form_data.append('trgt', $("#trgt9").val());
+// form_data.append('array', JSON.stringify(array));
+form_data.append('file', $('#fl9')[0].files[0]);
+
+$.ajax({
+url: "{% url 'he_work_add' client.id %}",
+type: 'POST',
+headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+data: form_data,
+processData: false,
+contentType: false,
+success: function(response) {
+if (response.message === 'success') {
+  $('#modalForm')[0].reset();
+}
+},
+error: function(jqXHR, textStatus, errorThrown) {
+console.log(textStatus, errorThrown);
+}
+});
+}
+
+
+    
+);
+$(document).on("click","#btn10",function(){
+
+var form_data = new FormData();
+form_data.append('task', $("#tsk10").text());
+form_data.append('des', $("#des10").val());
+form_data.append('tl_name', $("#tl_name10").val());
+form_data.append('sdate', $("#sdate10").val());
+form_data.append('edate', $("#edate10").val());
+form_data.append('trgt', $("#trgt10").val());
+// form_data.append('array', JSON.stringify(array));
+form_data.append('file', $('#fl10')[0].files[0]);
+
+$.ajax({
+url: "{% url 'he_work_add' client.id %}",
+type: 'POST',
+headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+data: form_data,
+processData: false,
+contentType: false,
+success: function(response) {
+if (response.message === 'success') {
+  $('#modalForm')[0].reset();
+}
+},
+error: function(jqXHR, textStatus, errorThrown) {
+console.log(textStatus, errorThrown);
+}
+});
+}
+
+
+    
+);
+
+$(document).on("click","#btn11",function(){
+
+var form_data = new FormData();
+var sel = $("input:radio[name='sub_tsk']:checked").val()
+form_data.append('task', $("#tsk11").text());
+form_data.append('des', $("#des11").val());
+form_data.append('tl_name', $("#tl_name11").val());
+form_data.append('sdate', $("#sdate11").val());
+form_data.append('edate', $("#edate11").val());
+form_data.append('trgt', $("#trgt11").val());
+// form_data.append('array', JSON.stringify(array));
+form_data.append('file', $('#fl11')[0].files[0]);
+
+
+
+$.ajax({
+url: "{% url 'he_work_add' client.id %}",
+type: 'POST',
+headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+data: form_data,
+processData: false,
+contentType: false,
+success: function(response) {
+if (response.message === 'success') {
+
+}
+},
+error: function(jqXHR, textStatus, errorThrown) {
+console.log(textStatus, errorThrown);
+}
+});
+}
+
+
+  
+);
+</script>
+
+<script>
+$(document).ready(function () {
+taskTxt1 = $("#tsk1").data('tsk-txt');
+taskFile1 = $("#tsk1").data('tsk-file');
+taskTarget1 = $("#tsk1").data('tsk-target');
+$('#des1').val(taskTxt1);
+$('#trgt1').val(taskTarget1);
+if (taskFile1) {
+      $('#downloadLink1').attr('href', taskFile1);
+      $('#downloadLink1').text('DOWNLOAD');
+  } else {
+      $('#downloadLink1').removeAttr('href');
+      $('#downloadLink1').text('No File Attached');
+  }
+});
+
+$(document).ready(function () {
+taskTxt2 = $("#tsk2").data('tsk-txt');
+taskFile2 = $("#tsk2").data('tsk-file');
+taskTarget2 = $("#tsk2").data('tsk-target');
+$('#des2').val(taskTxt2);
+$('#trgt2').val(taskTarget2);
+if (taskFile2) {
+      $('#downloadLink2').attr('href', taskFile2);
+      $('#downloadLink2').text('DOWNLOAD');
+  } else {
+      $('#downloadLink2').removeAttr('href');
+      $('#downloadLink2').text('No File Attached');
+  }
+});
+
+$(document).ready(function () {
+taskTxt3 = $("#tsk3").data('tsk-txt');
+taskFile3 = $("#tsk3").data('tsk-file');
+taskTarget3 = $("#tsk3").data('tsk-target');
+$('#des3').val(taskTxt3);
+$('#trgt3').val(taskTarget3);
+if (taskFile3) {
+      $('#downloadLink3').attr('href', taskFile3);
+      $('#downloadLink3').text('DOWNLOAD');
+  } else {
+      $('#downloadLink3').removeAttr('href');
+      $('#downloadLink3').text('No File Attached');
+  }
+});
+
+$(document).ready(function () {
+taskTxt4 = $("#tsk4").data('tsk-txt');
+taskFile4 = $("#tsk4").data('tsk-file');
+taskTarget4 = $("#tsk4").data('tsk-target');
+$('#des4').val(taskTxt4);
+$('#trgt4').val(taskTarget4);
+if (taskFile4) {
+      $('#downloadLink4').attr('href', taskFile4);
+      $('#downloadLink4').text('DOWNLOAD');
+  } else {
+      $('#downloadLink4').removeAttr('href');
+      $('#downloadLink4').text('No File Attached');
+  }
+});
+
+$(document).ready(function () {
+taskTxt5 = $("#tsk5").data('tsk-txt');
+taskFile5 = $("#tsk5").data('tsk-file');
+taskTarget5 = $("#tsk5").data('tsk-target');
+$('#des5').val(taskTxt5);
+$('#trgt5').val(taskTarget5);
+if (taskFile5) {
+      $('#downloadLink5').attr('href', taskFile5);
+      $('#downloadLink5').text('DOWNLOAD');
+  } else {
+      $('#downloadLink5').removeAttr('href');
+      $('#downloadLink5').text('No File Attached');
+  }
+});
+
+$(document).ready(function () {
+taskTxt6 = $("#tsk6").data('tsk-txt');
+taskFile6 = $("#tsk6").data('tsk-file');
+taskTarget6 = $("#tsk6").data('tsk-target');
+$('#des6').val(taskTxt6);
+$('#trgt6').val(taskTarget6);
+if (taskFile6) {
+      $('#downloadLink6').attr('href', taskFile6);
+      $('#downloadLink6').text('DOWNLOAD');
+  } else {
+      $('#downloadLink6').removeAttr('href');
+      $('#downloadLink6').text('No File Attached');
+  }
+});
+
+$(document).ready(function () {
+taskTxt7 = $("#tsk7").data('tsk-txt');
+taskFile7 = $("#tsk7").data('tsk-file');
+taskTarget7 = $("#tsk7").data('tsk-target');
+$('#des7').val(taskTxt7);
+$('#trgt7').val(taskTarget7);
+if (taskFile7) {
+      $('#downloadLink7').attr('href', taskFile7);
+      $('#downloadLink7').text('DOWNLOAD');
+  } else {
+      $('#downloadLink7').removeAttr('href');
+      $('#downloadLink7').text('No File Attached');
+  }
+});
+
+$(document).ready(function () {
+taskTxt8 = $("#tsk8").data('tsk-txt');
+taskFile8 = $("#tsk8").data('tsk-file');
+taskTarget8 = $("#tsk8").data('tsk-target');
+$('#des8').val(taskTxt8);
+$('#trgt8').val(taskTarget8);
+if (taskFile8) {
+      $('#downloadLink8').attr('href', taskFile8);
+      $('#downloadLink8').text('DOWNLOAD');
+  } else {
+      $('#downloadLink8').removeAttr('href');
+      $('#downloadLink8').text('No File Attached');
+  }
+});
+
+$(document).ready(function () {
+taskTxt9 = $("#tsk9").data('tsk-txt');
+taskFile9 = $("#tsk9").data('tsk-file');
+taskTarget9 = $("#tsk9").data('tsk-target');
+$('#des9').val(taskTxt9);
+$('#trgt9').val(taskTarget9);
+if (taskFile9) {
+      $('#downloadLink9').attr('href', taskFile9);
+      $('#downloadLink9').text('DOWNLOAD');
+  } else {
+      $('#downloadLink9').removeAttr('href');
+      $('#downloadLink9').text('No File Attached');
+  }
+});
+
+$(document).ready(function () {
+taskTxt10 = $("#tsk10").data('tsk-txt');
+taskFile10 = $("#tsk10").data('tsk-file');
+taskTarget10 = $("#tsk10").data('tsk-target');
+$('#des10').val(taskTxt10);
+$('#trgt10').val(taskTarget10);
+if (taskFile10) {
+      $('#downloadLink10').attr('href', taskFile10);
+      $('#downloadLink10').text('DOWNLOAD');
+  } else {
+      $('#downloadLink10').removeAttr('href');
+      $('#downloadLink10').text('No File Attached');
+  }
+});
+
+$(document).ready(function () {
+taskTxt11 = $("#tsk11").data('tsk-txt');
+taskFile11 = $("#tsk11").data('tsk-file');
+taskTarget11 = $("#tsk11").data('tsk-target');
+$('#des11').val(taskTxt11);
+$('#trgt11').val(taskTarget11);
+if (taskFile11) {
+      $('#downloadLink11').attr('href', taskFile11);
+      $('#downloadLink11').text('DOWNLOAD');
+  } else {
+      $('#downloadLink11').removeAttr('href');
+      $('#downloadLink11').text('No File Attached');
+  }
+});
+</script>
+<script>
+$(document).ready(function () {
+$("#search").on("keyup", function () {
+var value = $(this).val().toLowerCase();
+$("#myTable tr").filter(function () {
+$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+});
+});
+});
+
+
+</script>
+<script type="text/javascript">
+function setselected(id) {
+$('input[name="selected"]').val(id);
+}
+</script>
+<script>
+function check_seo1(){
+var chk_seo=document.getElementById("option1").checked;
+var onpg= document.getElementById('seo1');
+var offpg= document.getElementById('seo2');
+
+
+if (chk_seo==true){
+onpg.style=('display: block');
+offpg.style=('display: none');
+
+}
+}
+function check_seo2(){
+var chk_seo=document.getElementById("option2").checked;
+var onpg= document.getElementById('seo1');
+var offpg= document.getElementById('seo2');
+
+
+if (chk_seo==true){
+offpg.style=('display: block');
+onpg.style=('display: none');
+
+}
+}
+</script>

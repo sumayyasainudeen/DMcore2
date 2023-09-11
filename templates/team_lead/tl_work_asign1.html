@@ -1,0 +1,1012 @@
+{% extends 'team_lead/tl_base.html' %} 
+{%load static%}
+{%block content%}
+
+<div class="row pt-3" style="background-color: black;">
+  <div class="" style="font-size: 20px;font-weight: 600;color:#6C7293;">ALTOS TECHNOLOGIES</div>
+</div>
+
+<div class="row mt-4 ">
+      <div class="card">
+          <div class="card-body">
+                  <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row  px-md-3 px-xl-4 rounded mt-3">
+                      <div class="text-md-center text-xl-left">
+                          <h6 class="mb-1">BUSINESS NAME</h6>
+                        
+                      </div>
+                      <div class="align-self-center flex-grow text-right text-md-center text-xl-right py-md-2 py-xl-0">
+                          <h6 class="text-muted mb-0 mx-5">{{client.bs_name}}</h6>
+                      </div>
+                  </div>
+                  <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row  px-md-3 px-xl-4 rounded mt-3">
+                      <div class="text-md-center text-xl-left">
+                          <h6 class="mb-1">WEBSITE URL</h6>
+                      </div>
+                      <div class="align-self-center flex-grow text-right text-md-center text-xl-right py-md-2 py-xl-0 mx-5">
+                          <h6 class="text-muted mb-0">{{client.bs_website}}</h6>
+                      </div>
+                  </div>
+                  <div class="bg-gray-dark d-flex d-md-block d-xl-flex flex-row  px-md-3 px-xl-4 rounded mt-3">
+                    <div class="text-md-center text-xl-left">
+                        <h6 class="mb-1">LOCATION</h6> 
+                    </div>
+                    <div class="align-self-center flex-grow text-right text-md-center text-xl-right py-md-2 py-xl-0 mx-5">
+                        <h6 class="text-muted mb-0">{{client.bs_location}}</h6>
+                    </div>
+                </div>
+          </div>
+      </div>
+      
+  </div>
+
+<div class="row mt-4">
+  <div class="card">
+    <div class="card-body">
+      <input type="text" class="form-control text-light" id="search" placeholder="search...">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col" style="color:#6C7293;">Task name</th>
+              <th scope="col" style="color:#6C7293;">Assigned To</th>
+              <!-- <th scope="col" style="color:#6C7293;">Assign</th> -->
+              <th scope="col" style="color:#6C7293;">StartDate</th>
+              <th scope="col" style="color:#6C7293;">EndDate</th>
+              <th scope="col" style="color:#6C7293;">Submit</th>
+              
+            </tr>
+          </thead>
+          <tbody id="myTable"> 
+          {% for w in works %}    
+           {% if w.task == client.seo %}
+              <tr>
+                <form action="{% url 'tl_work_add' w.id %}" method="post">{% csrf_token %}
+              <td style="color:white;" data-bs-toggle="modal" data-bs-target="#wrk_1" id="tsk1">{{w.task}}</td>
+              <td style="color:white;">
+                {% if w.exe_name %}
+                <div class="badge badge-outline-success">{{ w.exe_name.fullname }}</div>
+                {% else %}
+                <select class="form-control" name="ex_name" id="ex_name">
+                  <option class="text-white" value="">Select Executive</option>
+                  {% for e in exe %}
+                    <option class="text-white" value="{{ e.id }}">{{e.fullname}}</option>
+                  {% endfor %}
+                </select> 
+                {% endif %}
+              </td>
+              <!-- <td style="color:white;">
+                <select class="form-control" name="ex_name" id="ex_name">
+                  <option class="text-white" value="">Select Executive</option>
+                  {% for e in exe %}
+                    <option class="text-white" value="{{ e.id }}">{{e.fullname}}</option>
+                  {% endfor %}
+                </select>             
+               </td>   -->
+              <td><input class="form-control" type="date" name="d1" id="sdate1" value="{{w.start_date|date:'Y-m-d'}}"></td>
+              <td><input class="form-control" type="date" name="d2" id="edate1" value="{{w.end_date|date:'Y-m-d'}}"></td>
+              <td><button class="btn btn-outline-success" id="btn1">SUBMIT</button></td>
+              
+              </form>
+              </tr>
+          {% endif %}  
+          {% if w.task == client.smm %}
+              <tr>
+                <form action="{% url 'tl_work_add' w.id %}" method="post">{% csrf_token %}
+              <td style="color:white;" data-bs-toggle="modal" data-bs-target="#wrk_2" id="tsk2">{{w.task}}</td>
+              <td style="color:white;">
+                {% if w.exe_name %}
+                <div class="badge badge-outline-success">{{ w.exe_name.fullname }}</div>
+                {% else %}
+                <select class="form-control" name="ex_name" id="ex_name">
+                  <option class="text-white" value="">Select Executive</option>
+                  {% for e in exe %}
+                  <option class="text-white" value="{{ e.id }}">{{e.fullname}}</option>
+                  {% endfor %}
+                </select>
+                {% endif %}
+              </td>
+              <!-- <td style="color:white;">
+                <select class="form-control" name="ex_name" id="ex_name">
+                  <option class="text-white" value="">Select Executive</option>
+                  {% for e in exe %}
+                  <option class="text-white" value="{{ e.id }}">{{e.fullname}}</option>
+                  {% endfor %}
+                </select>       
+               </td>   -->
+              <td><input class="form-control" type="date" name="d1" id="sdate2" value="{{w.start_date|date:'Y-m-d'}}"></td>
+              <td><input class="form-control" type="date" name="d2" id="edate2" value="{{w.end_date|date:'Y-m-d'}}"></td>
+              <td><button class="btn btn-outline-success" id="btn2">SUBMIT</button></td>
+              </form>
+              </tr>
+          {% endif %}  
+          {% if w.task == client.sem %}
+              <tr>
+                <form action="{% url 'tl_work_add' w.id %}" method="post">{% csrf_token %}
+              <td style="color:white;" data-bs-toggle="modal" data-bs-target="#wrk_3" id="tsk3">{{w.task}}</td>
+              <td style="color:white;">
+                {% if w.exe_name %}
+                <div class="badge badge-outline-success">{{ w.exe_name.fullname }}</div>
+                {% else %}
+                <select class="form-control" name="ex_name" id="ex_name">
+                  <option class="text-white" value="">Select Executive</option>
+                  {% for e in exe %}
+                  <option class="text-white" value="{{ e.id }}">{{e.fullname}}</option>
+                  {% endfor %}
+                </select>   
+                {% endif %}
+              </td>
+              <!-- <td style="color:white;">
+                <select class="form-control" name="ex_name" id="ex_name">
+                  <option class="text-white" value="">Select Executive</option>
+                  {% for e in exe %}
+                  <option class="text-white" value="{{ e.id }}">{{e.fullname}}</option>
+                  {% endfor %}
+                </select>              </td>   -->
+              <td><input class="form-control" type="date" name="d1" id="sdate3" value="{{w.start_date|date:'Y-m-d'}}"></td>
+              <td><input class="form-control" type="date" name="d2" id="edate3" value="{{w.end_date|date:'Y-m-d'}}"></td>
+              <td><button class="btn btn-outline-success" id="btn3">SUBMIT</button></td>
+              </form>
+              </tr>
+          {% endif %}  
+          {% if w.task == client.em %}
+              <tr>
+                <form action="{% url 'tl_work_add' w.id %}" method="post">{% csrf_token %}
+              <td style="color:white;" data-bs-toggle="modal" data-bs-target="#wrk_4" id="tsk4">{{w.task}}</td>
+              <td style="color:white;">
+                {% if w.exe_name %}
+                <div class="badge badge-outline-success">{{ w.exe_name.fullname }}</div>
+                {% else %}
+                <select class="form-control" name="ex_name" id="ex_name">
+                  <option class="text-white" value="">Select Executive</option>
+                  {% for e in exe %}
+                  <option class="text-white" value="{{ e.id }}">{{e.fullname}}</option>
+                  {% endfor %}
+                </select>
+                {% endif %}
+              </td>
+              <!-- <td style="color:white;">
+                <select class="form-control" name="ex_name" id="ex_name">
+                  <option class="text-white" value="">Select Executive</option>
+                  {% for e in exe %}
+                  <option class="text-white" value="{{ e.id }}">{{e.fullname}}</option>
+                  {% endfor %}
+                </select>
+              </td>   -->
+              <td><input class="form-control" type="date" name="d1" id="sdate4" value="{{w.start_date|date:'Y-m-d'}}"></td>
+              <td><input class="form-control" type="date" name="d2" id="edate4" value="{{w.end_date|date:'Y-m-d'}}"></td>
+              <td><button class="btn btn-outline-success btn4" id="btn4" >SUBMIT</button></td>
+              </form>
+              </tr>
+          {% endif %}  
+          {% if w.task == client.cm %}
+              <tr>
+                <form action="{% url 'tl_work_add' w.id %}" method="post">{% csrf_token %}
+              <td style="color:white;" data-bs-toggle="modal" data-bs-target="#wrk_5" id="tsk5">{{w.task}}</td>
+              <td style="color:white;">
+                {% if w.exe_name %}
+                <div class="badge badge-outline-success">{{ w.exe_name.fullname }}</div>
+                {% else %}
+                <select class="form-control" name="ex_name" id="ex_name">
+                  <option class="text-white" class="text-white" value="">Select Executive</option>
+                  {% for e in exe %}
+                  <option class="text-white" value="{{ e.id }}">{{e.fullname}}</option>
+                  {% endfor %}
+                </select>
+                {% endif %}
+              </td>
+              <!-- <td style="color:white;">
+                <select class="form-control" name="ex_name" id="ex_name">
+                  <option class="text-white" class="text-white" value="">Select Executive</option>
+                  {% for e in exe %}
+                  <option class="text-white" value="{{ e.id }}">{{e.fullname}}</option>
+                  {% endfor %}
+                </select>              </td>   -->
+              <td><input class="form-control" type="date" name="d1" id="sdate5" value="{{w.start_date|date:'Y-m-d'}}"></td>
+              <td><input class="form-control" type="date" name="d2" id="edate5" value="{{w.end_date|date:'Y-m-d'}}"></td>
+              <td><button class="btn btn-outline-success" id="btn5">SUBMIT</button></td>
+              </form>
+              </tr>
+          {% endif %}  
+          {% if w.task == client.am %}
+              <tr>
+                <form action="{% url 'tl_work_add' w.id %}" method="post">{% csrf_token %}
+              <td style="color:white;" data-bs-toggle="modal" data-bs-target="#wrk_6" id="tsk6">{{w.task}}</td>
+              <td style="color:white;">
+                {% if w.exe_name %}
+                <div class="badge badge-outline-success">{{ w.exe_name.fullname }}</div>
+                {% else %}
+                <select class="form-control" name="ex_name" id="ex_name">
+                  <option class="text-white" value="">Select Executive</option>
+                  {% for e in exe %}
+                  <option class="text-white" value="{{ e.id }}">{{e.fullname}}</option>
+                  {% endfor %}
+                </select>
+                {% endif %}
+              </td>
+              <!-- <td style="color:white;">
+                <select class="form-control" name="ex_name" id="ex_name">
+                  <option class="text-white" value="">Select Executive</option>
+                  {% for e in exe %}
+                  <option class="text-white" value="{{ e.id }}">{{e.fullname}}</option>
+                  {% endfor %}
+                </select>              </td>   -->
+              <td><input class="form-control" type="date" name="d1" id="sdate6" value="{{w.start_date|date:'Y-m-d'}}"></td>
+              <td><input class="form-control" type="date" name="d2" id="edate6" value="{{w.end_date|date:'Y-m-d'}}"></td>
+              <td><button class="btn btn-outline-success" id="btn6">SUBMIT</button></td>
+              </form>
+              </tr>
+          {% endif %}  
+          {% if w.task == client.mm %}
+              <tr>
+                <form action="{% url 'tl_work_add' w.id %}" method="post">{% csrf_token %}
+              <td style="color:white;" data-bs-toggle="modal" data-bs-target="#wrk_7" id="tsk7">{{w.task}}</td>
+              <td style="color:white;">
+                {% if w.exe_name %}
+                <div class="badge badge-outline-success">{{ w.exe_name.fullname }}</div>
+                {% else %}
+                <select class="form-control" name="ex_name" id="ex_name">
+                  <option class="text-white" value="">Select Executive</option>
+                  {% for e in exe %}
+                  <option class="text-white" value="{{ e.id }}">{{e.fullname}}</option>
+                  {% endfor %}
+                </select>
+                {% endif %}
+              </td>
+              <!-- <td style="color:white;">
+                <select class="form-control" name="ex_name" id="ex_name">
+                  <option class="text-white" value="">Select Executive</option>
+                  {% for e in exe %}
+                  <option class="text-white" value="{{ e.id }}">{{e.fullname}}</option>
+                  {% endfor %}
+                </select>              </td>   -->
+              <td><input class="form-control" type="date" name="d1" id="sdate7" value="{{w.start_date|date:'Y-m-d'}}"></td>
+              <td><input class="form-control" type="date" name="d2" id="edate7" value="{{w.end_date|date:'Y-m-d'}}"></td>
+              <td><button class="btn btn-outline-success" id="btn7">SUBMIT</button></td>
+              </form>
+              </tr>
+          {% endif %}  
+          {% if w.task == client.vm %}
+              <tr>
+                <form action="{% url 'tl_work_add' w.id %}" method="post">{% csrf_token %}
+              <td style="color:white;" data-bs-toggle="modal" data-bs-target="#wrk_8" id="tsk8">{{w.task}}</td>
+              <td style="color:white;">
+                {% if w.exe_name %}
+                <div class="badge badge-outline-success">{{ w.exe_name.fullname }}</div>
+                {% else %}
+                <select class="form-control" name="ex_name" id="ex_name">
+                  <option class="text-white" value="">Select Executive</option>
+                  {% for e in exe %}
+                  <option class="text-white" value="{{ e.id }}">{{e.fullname}}</option>
+                  {% endfor %}
+                </select>  
+                {% endif %}
+              </td>
+              <!-- <td style="color:white;">
+                <select class="form-control" name="ex_name" id="ex_name">
+                  <option class="text-white" value="">Select Executive</option>
+                  {% for e in exe %}
+                  <option class="text-white" value="{{ e.id }}">{{e.fullname}}</option>
+                  {% endfor %}
+                </select>              </td>   -->
+              <td><input class="form-control" type="date" name="d1" id="sdate8" value="{{w.start_date|date:'Y-m-d'}}"></td>
+              <td><input class="form-control" type="date" name="d2" id="edate8" value="{{w.end_date|date:'Y-m-d'}}"></td>
+              <td><button class="btn btn-outline-success" id="btn8">SUBMIT</button></td>
+              </form>
+              </tr>
+          {% endif %}  
+          
+          {% if w.task == client.smo %}
+              <tr>
+                <form action="{% url 'tl_work_add' w.id %}" method="post">{% csrf_token %}
+              <td style="color:white;" data-bs-toggle="modal" data-bs-target="#wrk_9" id="tsk9">{{w.task}}</td>
+              <td style="color:white;">
+                {% if w.exe_name %}
+                <div class="badge badge-outline-success">{{ w.exe_name.fullname }}</div>
+                {% else %}
+                <select class="form-control" name="ex_name" id="ex_name">
+                  <option class="text-white" value="">Select Executive</option>
+                  {% for e in exe %}
+                  <option class="text-white" value="{{ e.id }}">{{e.fullname}}</option>
+                  {% endfor %}
+                </select>   
+                {% endif %}
+              </td>
+              <!-- <td style="color:white;">
+                <select class="form-control" name="ex_name" id="ex_name">
+                  <option class="text-white" value="">Select Executive</option>
+                  {% for e in exe %}
+                  <option class="text-white" value="{{ e.id }}">{{e.fullname}}</option>
+                  {% endfor %}
+                </select>              </td>   -->
+              <td><input class="form-control" type="date" name="d1" id="sdate9" value="{{w.start_date|date:'Y-m-d'}}"></td>
+              <td><input class="form-control" type="date" name="d2" id="edate9" value="{{w.end_date|date:'Y-m-d'}}"></td>
+              <td><button class="btn btn-outline-success" id="btn9">SUBMIT</button></td>
+              
+              </form>
+              </tr>
+          {% endif %}  
+          {% if w.task == client.lc %}
+              <tr>
+                <form action="{% url 'tl_work_add' w.id %}" method="post">{% csrf_token %}
+              <td style="color:white;" data-bs-toggle="modal" data-bs-target="#wrk_10" id="tsk10">{{w.task}}</td>
+              <td style="color:white;">
+                {% if w.exe_name %}
+                <div class="badge badge-outline-success">{{ w.exe_name.fullname }}</div>
+                {% else %}
+                <select class="form-control" name="ex_name" id="ex_name">
+                  <option class="text-white" value="">Select Executive</option>
+                  {% for e in exe %}
+                  <option class="text-white" value="{{ e.id }}">{{e.fullname}}</option>
+                  {% endfor %}
+                </select>
+                {% endif %}
+              </td>
+              <!-- <td style="color:white;">
+                <select class="form-control" name="ex_name" id="ex_name">
+                  <option class="text-white" value="">Select Executive</option>
+                  {% for e in exe %}
+                  <option class="text-white" value="{{ e.id }}">{{e.fullname}}</option>
+                  {% endfor %}
+                </select>              </td>   -->
+              <td><input class="form-control" type="date" name="d1" id="sdate10" value="{{w.start_date|date:'Y-m-d'}}"></td>
+              <td><input class="form-control" type="date" name="d2" id="edate10" value="{{w.end_date|date:'Y-m-d'}}"></td>
+              <td><button class="btn btn-outline-success" id="btn10">SUBMIT</button></td>
+              </form>
+              </tr>
+          {% endif %} 
+          {% endfor %} 
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="rowmt-5 hidden modal fade" id="wrk_1">
+  <div class="modal-dialog bd-example-modal-xl modal-dialog-centered" role="document" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-hidden="true" >
+    <div class="modal-content modal-xl" style="background-color: #191c24;">
+      <div class="card ">
+        <div class="card-body">
+          <button type="button" class="close text-light" data-bs-dismiss="modal" aria-label=""
+            style="background-color: #191c24;border:none;float: right;font-size: 20px;">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <div class="text-info" style="font-size: 20px;font-weight: 600;">ABOUT WORK</div>
+
+          
+            <div class="row pt-1">
+              <div class="col-md-4">
+                <div class="mr-2 ml-3 mt-2 text-light" style="color:white;">Description</div>
+              </div>
+              <div class="col">
+                <textarea class="form-control ml-3 mt-2" name="a" rows="8" cols="100" style="height: 100%;" id="des1">{{client.seo_txt}}</textarea>
+              </div>
+              <div class="row mt-3">
+                <div class="col-md-4">
+                  <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Download File</div>
+                </div>
+                <div class="col-md-8 ">
+                  <button  class="ml-3 mt-2 btn btn-outline-success" style="width:100%;">
+                    {% if client.seo_file %}
+                    <a href="{{client.seo_file.url}}" download style="text-decoration:none;" class="text-success">
+                      DOWMLOAD</a>
+                      {% else  %}
+                      <a href=""  style="text-decoration:none;" class="text-success" download>No File Attached</a>
+                      {% endif %}
+                    </button>
+                </div>
+              </div>
+
+              <div class="row mt-1">
+                <div class="col-md-4">
+                  <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Upload File</div>
+                </div>
+                <div class="col-md-8 ">
+                  <input name="file" class="drop form-control ml-3 mt-2" id="fl1"  type="file" value="">
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-md-6">
+                <input type="radio" id="option1" name="sub_tsk" value="On page" onclick="check_seo1()">
+                <label for="option1">On page</label>
+                </div>
+                <div class="col-md-6">
+                <input type="radio" id="option2" name="sub_tsk" value="Off page" onclick="check_seo2()">      
+                <label for="option2">Off page</label>       
+                </div>
+              </div> 
+              <div class="row mt-2" style="display: none;" id="seo1">
+                <div class="col-md-4">
+                  <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Target</div>
+                </div>
+                <div class="col-md-8">
+                  <input type="number" class="drop form-control ml-3 mt-2 text-light" value="{{client.on_pg_target}}" id="on_trgt">
+                </div>
+              </div> 
+              <div class="row mt-2" style="display: none;" id="seo2">
+                <div class="col-md-4">
+                  <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Target</div>
+                </div>
+                <div class="col-md-8">
+                  <input type="number" class="drop form-control ml-3 mt-2 text-light" value="{{client.off_pg_target}}" id="off_trgt">
+                </div>
+              </div> 
+            </div>
+          </div> 
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="rowmt-5 hidden modal fade" id="wrk_2">
+  <div class="modal-dialog bd-example-modal-xl modal-dialog-centered" role="document" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-hidden="true" >
+    <div class="modal-content modal-xl" style="background-color: #191c24;">
+      <div class="card ">
+        <div class="card-body">
+          <button type="button" class="close text-light" data-bs-dismiss="modal" aria-label=""
+            style="background-color: #191c24;border:none;float: right;font-size: 20px;">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <div class="text-info" style="font-size: 20px;font-weight: 600;">ABOUT WORK</div>
+
+            <div class="row pt-1">
+              <div class="col-md-4">
+                <div class="mr-2 ml-3 mt-2 text-light" style="color:white;">Description</div>
+              </div>
+              <div class="col">
+                <textarea class="form-control ml-3 mt-2" name="a" rows="8" cols="100" style="height: 100%;" id="des2">{{client.smm_txt}}</textarea>
+              </div>
+              <div class="row mt-2" >
+                <div class="col-md-4">
+                  <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Target</div>
+                </div>
+                <div class="col-md-8">
+                  <input type="number" class="drop form-control ml-3 mt-2 text-light" value="{{client.smm_target}}" id="trgt2">
+                </div>
+              </div> 
+              <div class="row mt-5">
+                <div class="col-md-4">
+                  <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Download File</div>
+                </div>
+                <div class="col-md-8 ">
+                  <button  class="ml-3 mt-2 btn btn-outline-success" style="width:100%;">
+                    {% if client.smm_file %}
+                    <a href="{{client.smm_file.url}}" download style="text-decoration:none;" class="text-success">
+                      DOWMLOAD</a>
+                      {% else  %}
+                      <a href=""  style="text-decoration:none;" class="text-success" download>No File Attached</a>
+                      {% endif %}
+
+                    </button>
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-4">
+                  <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;">Upload File</div>
+                </div>
+                <div class="col-md-8 ">
+                  <input type="file" name="file" class="drop form-control ml-3 mt-2" required id="fl2">
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="rowmt-5 hidden modal fade" id="wrk_3">
+  <div class="modal-dialog bd-example-modal-xl modal-dialog-centered" role="document" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-hidden="true" >
+    <div class="modal-content modal-xl" style="background-color: #191c24;">
+      <div class="card ">
+        <div class="card-body">
+          <button type="button" class="close text-light" data-bs-dismiss="modal" aria-label=""
+            style="background-color: #191c24;border:none;float: right;font-size: 20px;">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <div class="text-info" style="font-size: 20px;font-weight: 600;">ABOUT WORK</div>
+            <div class="row pt-1">
+              <div class="col-md-4">
+                <div class="mr-2 ml-3 mt-2 text-light" style="color:white;">Description</div>
+              </div>
+              <div class="col">
+                <textarea class="form-control ml-3 mt-2" name="a" rows="8" cols="100" style="height: 100%;" id="des3">{{client.sem_txt}}</textarea>
+              </div>
+              <div class="row mt-2" >
+                <div class="col-md-4">
+                  <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Target</div>
+                </div>
+                <div class="col-md-8">
+                  <input type="number" class="drop form-control ml-3 mt-2 text-light" value="{{client.sem_target}}" id="trgt3">
+                </div>
+              </div> 
+              <div class="row mt-5">
+                <div class="col-md-4">
+                  <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Download File</div>
+                </div>
+                <div class="col-md-8 ">
+                  <button  class="ml-3 mt-2 btn btn-outline-success" style="width:100%;">
+                    {% if client.sem_file %}
+                    <a href="{{client.sem_file.url}}" download style="text-decoration:none;" class="text-success">
+                      DOWMLOAD</a>
+                      {% else  %}
+                      <a href=""  style="text-decoration:none;" class="text-success" download>No File Attached</a>
+                      {% endif %}
+
+                    </button>
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-4">
+                  <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;">Upload File</div>
+                </div>
+                <div class="col-md-8 ">
+                  <input type="file" name="file" class="drop form-control ml-3 mt-2" required id="fl3" v>
+                </div>
+  
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="rowmt-5 hidden modal fade" id="wrk_4">
+  <div class="modal-dialog bd-example-modal-xl modal-dialog-centered" role="document" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-hidden="true" >
+    <div class="modal-content modal-xl" style="background-color: #191c24;">
+      <div class="card ">
+        <div class="card-body">
+          <button type="button" class="close text-light" data-bs-dismiss="modal" aria-label=""
+            style="background-color: #191c24;border:none;float: right;font-size: 20px;">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <div class="text-info" style="font-size: 20px;font-weight: 600;">ABOUT WORK</div>
+
+            <div class="row pt-1">
+              <div class="col-md-4">
+                <div class="mr-2 ml-3 mt-2 text-light" style="color:white;">Description</div>
+              </div>
+              <div class="col">
+                <textarea class="form-control ml-3 mt-2" name="a" rows="8" cols="100" style="height: 100%;" id="des4">{{client.em_txt}}</textarea>
+              </div>
+              <div class="row mt-2" >
+                <div class="col-md-4">
+                  <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Target</div>
+                </div>
+                <div class="col-md-8">
+                  <input type="number" class="drop form-control ml-3 mt-2 text-light" value="{{client.em_target}}" id="trgt4">
+                </div>
+              </div> 
+              <div class="row mt-5">
+                <div class="col-md-4">
+                  <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Download File</div>
+                </div>
+                <div class="col-md-8 ">
+                  <button  class="ml-3 mt-2 btn btn-outline-success" style="width:100%;">
+                    {% if client.em_file %}
+                    <a href="{{client.em_file.url}}" download style="text-decoration:none;" class="text-success">
+                      DOWMLOAD</a>
+                      {% else  %}
+                      <a href=""  style="text-decoration:none;" class="text-success" download>No File Attached</a>
+                      {% endif %}
+
+                    </button>
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-4">
+                  <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;">Upload File</div>
+                </div>
+                <div class="col-md-8 ">
+                  <input type="file" name="file" class="drop form-control ml-3 mt-2" required id="fl4">
+                </div>
+                
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="rowmt-5 hidden modal fade" id="wrk_5">
+  <div class="modal-dialog bd-example-modal-xl modal-dialog-centered" role="document" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-hidden="true" >
+    <div class="modal-content modal-xl" style="background-color: #191c24;">
+      <div class="card ">
+        <div class="card-body">
+          <button type="button" class="close text-light" data-bs-dismiss="modal" aria-label=""
+            style="background-color: #191c24;border:none;float: right;font-size: 20px;">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <div class="text-info" style="font-size: 20px;font-weight: 600;">ABOUT WORK</div>
+            <div class="row pt-1">
+              <div class="col-md-4">
+                <div class="mr-2 ml-3 mt-2 text-light" style="color:white;">Description</div>
+              </div>
+              <div class="col">
+                <textarea class="form-control ml-3 mt-2" name="a" rows="8" cols="100" style="height: 100%;" id="des5">{{client.cm_txt}}</textarea>
+              </div>
+              <div class="row mt-2" >
+                <div class="col-md-4">
+                  <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Target</div>
+                </div>
+                <div class="col-md-8">
+                  <input type="number" class="drop form-control ml-3 mt-2 text-light" value="{{client.cm_target}}" id="trgt5">
+                </div>
+              </div> 
+              <div class="row mt-5">
+                <div class="col-md-4">
+                  <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Download File</div>
+                </div>
+                <div class="col-md-8 ">
+                  <button  class="ml-3 mt-2 btn btn-outline-success" style="width:100%;">
+                    {% if client.cm_file %}
+                    <a href="{{client.cm_file.url}}" download style="text-decoration:none;" class="text-success">
+                      DOWMLOAD</a>
+                      {% else  %}
+                      <a href=""  style="text-decoration:none;" class="text-success" download>No File Attached</a>
+                      {% endif %}
+
+                    </button>
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-4">
+                  <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;">Upload File</div>
+                </div>
+                <div class="col-md-8 ">
+                  <input type="file" name="file" class="drop form-control ml-3 mt-2" required id="fl5">
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="rowmt-5 hidden modal fade" id="wrk_6">
+  <div class="modal-dialog bd-example-modal-xl modal-dialog-centered" role="document" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-hidden="true" >
+    <div class="modal-content modal-xl" style="background-color: #191c24;">
+      <div class="card ">
+        <div class="card-body">
+          <button type="button" class="close text-light" data-bs-dismiss="modal" aria-label=""
+            style="background-color: #191c24;border:none;float: right;font-size: 20px;">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <div class="text-info" style="font-size: 20px;font-weight: 600;">ABOUT WORK</div>
+
+            <div class="row pt-1">
+              <div class="col-md-4">
+                <div class="mr-2 ml-3 mt-2 text-light" style="color:white;">Description</div>
+              </div>
+              <div class="col">
+                <textarea class="form-control ml-3 mt-2" name="a" rows="8" cols="100" style="height: 100%;" id="des6">{{client.am_txt}}</textarea>
+              </div>
+              <div class="row mt-2" >
+                <div class="col-md-4">
+                  <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Target</div>
+                </div>
+                <div class="col-md-8">
+                  <input type="number" class="drop form-control ml-3 mt-2 text-light" value="{{client.am_target}}" id="trgt6">
+                </div>
+              </div> 
+              <div class="row mt-5">
+                <div class="col-md-4">
+                  <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Download File</div>
+                </div>
+                <div class="col-md-8 ">
+                  <button  class="ml-3 mt-2 btn btn-outline-success" style="width:100%;">
+                    {% if client.am_file %}
+                    <a href="{{client.am_file.url}}" download style="text-decoration:none;" class="text-success">
+                      DOWMLOAD</a>
+                      {% else  %}
+                      <a href=""  style="text-decoration:none;" class="text-success" download>No File Attached</a>
+                      {% endif %}
+
+                    </button>
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-4">
+                  <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;">Upload File</div>
+                </div>
+                <div class="col-md-8 ">
+                  <input type="file" name="file" class="drop form-control ml-3 mt-2" required id="fl6">
+                </div>
+                
+              </div>
+            </div>
+         
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="rowmt-5 hidden modal fade" id="wrk_7">
+  <div class="modal-dialog bd-example-modal-xl modal-dialog-centered" role="document" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-hidden="true" >
+    <div class="modal-content modal-xl" style="background-color: #191c24;">
+      <div class="card ">
+        <div class="card-body">
+          <button type="button" class="close text-light" data-bs-dismiss="modal" aria-label=""
+            style="background-color: #191c24;border:none;float: right;font-size: 20px;">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <div class="text-info" style="font-size: 20px;font-weight: 600;">ABOUT WORK</div>
+
+            <div class="row pt-1">
+              <div class="col-md-4">
+                <div class="mr-2 ml-3 mt-2 text-light" style="color:white;">Description</div>
+              </div>
+              <div class="col">
+                <textarea class="form-control ml-3 mt-2" name="a" rows="8" cols="100" style="height: 100%;" id="des7">{{client.mm_txt}}</textarea>
+              </div>
+              <div class="row mt-2" >
+                <div class="col-md-4">
+                  <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Target</div>
+                </div>
+                <div class="col-md-8">
+                  <input type="number" class="drop form-control ml-3 mt-2 text-light" value="{{client.mm_target}}" id="trgt7">
+                </div>
+              </div> 
+              <div class="row mt-5">
+                <div class="col-md-4">
+                  <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Download File</div>
+                </div>
+                <div class="col-md-8 ">
+                  <button  class="ml-3 mt-2 btn btn-outline-success" style="width:100%;">
+                    {% if client.mm_file %}
+                    <a href="{{client.mm_file.url}}" download style="text-decoration:none;" class="text-success">
+                      DOWMLOAD</a>
+                      {% else  %}
+                      <a href=""  style="text-decoration:none;" class="text-success" download>No File Attached</a>
+                      {% endif %}
+
+                    </button>
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-4">
+                  <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;">Upload File</div>
+                </div>
+                <div class="col-md-8 ">
+                  <input type="file" name="file" class="drop form-control ml-3 mt-2" required id="fl7">
+                </div> 
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="rowmt-5 hidden modal fade" id="wrk_8">
+  <div class="modal-dialog bd-example-modal-xl modal-dialog-centered" role="document" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-hidden="true" >
+    <div class="modal-content modal-xl" style="background-color: #191c24;">
+      <div class="card ">
+        <div class="card-body">
+          <button type="button" class="close text-light" data-bs-dismiss="modal" aria-label=""
+            style="background-color: #191c24;border:none;float: right;font-size: 20px;">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <div class="text-info" style="font-size: 20px;font-weight: 600;">ABOUT WORK</div>
+
+            <div class="row pt-1">
+              <div class="col-md-4">
+                <div class="mr-2 ml-3 mt-2 text-light" style="color:white;">Description</div>
+              </div>
+              <div class="col">
+                <textarea class="form-control ml-3 mt-2" name="a" rows="8" cols="100" style="height: 100%;" id="des8">{{client.vm_txt}}</textarea>
+              </div>
+              <div class="row mt-2" >
+                <div class="col-md-4">
+                  <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Target</div>
+                </div>
+                <div class="col-md-8">
+                  <input type="number" class="drop form-control ml-3 mt-2 text-light" value="{{client.vm_target}}" id="trgt8">
+                </div>
+              </div> 
+              <div class="row mt-5">
+                <div class="col-md-4">
+                  <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Download File</div>
+                </div>
+                <div class="col-md-8 ">
+                  <button  class="ml-3 mt-2 btn btn-outline-success" style="width:100%;">
+                    {% if client.vm_file %}
+                    <a href="{{client.vm_file.url}}" download style="text-decoration:none;" class="text-success">
+                      DOWMLOAD</a>
+                      {% else  %}
+                      <a href=""  style="text-decoration:none;" class="text-success" download>No File Attached</a>
+                      {% endif %}
+
+                    </button>
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-4">
+                  <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;">Upload File</div>
+                </div>
+                <div class="col-md-8 ">
+                  <input type="file" name="file" class="drop form-control ml-3 mt-2" required id="fl8">
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="rowmt-5 hidden modal fade" id="wrk_9">
+  <div class="modal-dialog bd-example-modal-xl modal-dialog-centered" role="document" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-hidden="true" >
+    <div class="modal-content modal-xl" style="background-color: #191c24;">
+      <div class="card ">
+        <div class="card-body">
+          <button type="button" class="close text-light" data-bs-dismiss="modal" aria-label=""
+            style="background-color: #191c24;border:none;float: right;font-size: 20px;">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <div class="text-info" style="font-size: 20px;font-weight: 600;">ABOUT WORK</div>
+
+            <div class="row pt-1">
+              <div class="col-md-4">
+                <div class="mr-2 ml-3 mt-2 text-light" style="color:white;">Description</div>
+              </div>
+              <div class="col">
+                <textarea class="form-control ml-3 mt-2" name="a" rows="8" cols="100" style="height: 100%;" id="des9">{{client.smo_txt}}</textarea>
+              </div>
+              <div class="row mt-2" >
+                <div class="col-md-4">
+                  <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Target</div>
+                </div>
+                <div class="col-md-8">
+                  <input type="number" class="drop form-control ml-3 mt-2 text-light" value="{{client.smo_target}}" id="trgt9">
+                </div>
+              </div> 
+              <div class="row mt-5">
+                <div class="col-md-4">
+                  <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Download File</div>
+                </div>
+                <div class="col-md-8 ">
+                  <button  class="ml-3 mt-2 btn btn-outline-success" style="width:100%;">
+                    {% if client.smo_file %}
+                    <a href="{{client.smo_file.url}}" download style="text-decoration:none;" class="text-success">
+                      DOWMLOAD</a>
+                      {% else  %}
+                      <a href=""  style="text-decoration:none;" class="text-success" download>No File Attached</a>
+                      {% endif %}
+
+                    </button>
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-4">
+                  <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;">Upload File</div>
+                </div>
+                <div class="col-md-8 ">
+                  <input type="file" name="file" class="drop form-control ml-3 mt-2" required id="fl9">
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="rowmt-5 hidden modal fade" id="wrk_10">
+  <div class="modal-dialog bd-example-modal-xl modal-dialog-centered" role="document" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-hidden="true" >
+    <div class="modal-content modal-xl" style="background-color: #191c24;">
+      <div class="card ">
+        <div class="card-body">
+          <button type="button" class="close text-light" data-bs-dismiss="modal" aria-label=""
+            style="background-color: #191c24;border:none;float: right;font-size: 20px;">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <div class="text-info" style="font-size: 20px;font-weight: 600;">ABOUT WORK</div>
+
+            <div class="row pt-1">
+              <div class="col-md-4">
+                <div class="mr-2 ml-3 mt-2 text-light" style="color:white;">Description</div>
+              </div>
+              <div class="col">
+                <textarea class="form-control ml-3 mt-2" name="a" rows="8" cols="100" style="height: 100%;" id="des10">{{client.lc_txt}}</textarea>
+              </div>
+              <div class="row mt-2" >
+                <div class="col-md-4">
+                  <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Target</div>
+                </div>
+                <div class="col-md-8">
+                  <input type="number" class="drop form-control ml-3 mt-2 text-light" value="{{client.lc_target}}" id="trgt10">
+                </div>
+              </div> 
+              <div class="row mt-5">
+                <div class="col-md-4">
+                  <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;" >Download File</div>
+                </div>
+                <div class="col-md-8 ">
+                  <button  class="ml-3 mt-2 btn btn-outline-success" style="width:100%;">
+                    {% if client.lc_file %}
+                    <a href="{{client.lc_file.url}}" download style="text-decoration:none;" class="text-success">
+                      DOWMLOAD</a>
+                      {% else  %}
+                      <a href=""  style="text-decoration:none;" class="text-success" download>No File Attached</a>
+                      {% endif %}
+
+                    </button>
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-4">
+                  <div class=" mr-2 ml-3 mt-2 text-light" style="color:white;">Upload File</div>
+                </div>
+                <div class="col-md-8 ">
+                  <input type="file" name="file" class="drop form-control ml-3 mt-2" required id="fl10">
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <script>
+    $(document).on('click', '#change_btn', function() {
+     var sid = $(this).data('id');
+    $('#inputField2').val(sid);
+     console.log(sid); 
+     
+   });
+</script> -->
+<script>
+  $(document).ready(function () {
+    $("#search").on("keyup", function () {
+      var value = $(this).val().toLowerCase();
+      $("#myTable tr").filter(function () {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
+
+  
+</script>
+<script type="text/javascript">
+  function setselected(id) {
+    $('input[name="selected"]').val(id);
+  }
+</script>
+<script>
+  function check_seo1(){
+    var chk_seo=document.getElementById("option1").checked;
+    var onpg= document.getElementById('seo1');
+    var offpg= document.getElementById('seo2');
+    
+    
+    if (chk_seo==true){
+      onpg.style=('display: block');
+      offpg.style=('display: none');
+      
+    }
+  }
+  function check_seo2(){
+    var chk_seo=document.getElementById("option2").checked;
+    var onpg= document.getElementById('seo1');
+    var offpg= document.getElementById('seo2');
+    
+    
+    if (chk_seo==true){
+      offpg.style=('display: block');
+      onpg.style=('display: none');
+      
+    }
+  }
+</script>
+{% endblock %}
+

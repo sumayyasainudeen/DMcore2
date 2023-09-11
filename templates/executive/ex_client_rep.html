@@ -1,0 +1,95 @@
+{%extends 'executive/ex_base.html'%}
+{%load static%}
+{% load custom_filters %}
+{%block content%}
+
+<style>
+    .imgBox
+    {
+        height: 270px;
+        width: 350px;
+    }
+    .imgBox img{
+        height: 100%;
+        width: 100%;
+        object-fit: fill;
+    }
+    .detail_imgBox
+    {
+        width: 120px;
+        height: 100px;
+    }
+    .detail_imgBox img{
+        width: 100%;
+        height: 100%;
+        object-fit: fill;
+        margin-bottom: 1rem;
+    }
+</style>
+
+{% for w in work_as %}
+<div class="card mt-2 p-3">
+    <h4>{{w.work.task}}</h4>
+
+    <div class="row">
+    {% for r in rep %}
+        {% if w.work == r.work %}
+    
+            <div class="col-lg-4 col-12 col-md-6">
+                {% if r.graph %}
+                <div class="imgBox mt-3">
+                    <img src="{{r.graph.url}}">
+                
+                </div>
+                <p class="mt-2">Start date:  &nbsp;{{r.start_date}}  &nbsp; End date: &nbsp;{{r.end_date}} </p>
+                <div class="text-center mt-2 mb-3">
+                    <a href="{{r.audit_rprt}}" class="btn btn-outline-primary mt-2" download="" >audit pdf</a>
+                </div>
+                
+            
+            </div>
+        {% endif %}
+
+        {% endif %}
+    {% endfor %}
+    </div>
+    <hr>
+
+    <div class="row mt-3 p-2">
+
+        {% for wd in work_details %}
+            {% if w.work == wd.smo_work %}
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="card mt-2 p-2">
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <h4 class="mt-2">{{wd.smo_platform}}</h4>
+                            <h6>{{wd.smo_platform_title}}</h6>
+                            <p> count : {{wd.smo_count}}</p> 
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="detail_imgBox">
+                                {% if wd.smo_files.name|file_extension_is_image %}
+                                <img src="{{ wd.smo_files.url }}" class="detail_img">
+                                {% else %}
+                                <div class="badge badge-outline-primary"><a style="text-decoration: none;" href="{{ wd.smo_files.url }}" download>
+                                    Download</a>
+                                </div>
+                                {% endif %}
+                            </div>
+                           
+                        </div>
+                    </div>
+                    
+                    <p class="mt-2"> From : &nbsp;{{wd.smo_start_date}} &nbsp;&nbsp; To :{{wd.smo_end_date}} &nbsp;</p>
+                </div>
+            </div> 
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+{% endfor %}
+
+
+{% endblock %}

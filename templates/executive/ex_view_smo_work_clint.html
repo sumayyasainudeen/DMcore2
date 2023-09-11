@@ -1,0 +1,285 @@
+{%extends 'executive/ex_base.html'%}
+<!-- DEVprojects -->
+{%load static%}
+{% load custom_filters %}
+{%block content%}
+
+
+<div class="row pt-3">
+    <div class="" style="font-size: 20px;font-weight: 600;color:#6C7293;">
+      Client
+    </div>
+</div>
+
+
+<div class="row mt-5">
+
+    <div class="col-md-6 col-sm-12 col-lg-12 ">
+
+      <div class="card">
+        <div class="table-responsive mt-3 mb-3 container">
+
+            <table class="table   table-bordered ">
+            <thead style="background-color: black;">
+                <tr>
+                <th scope="col" style="color:#6C7293;">Social Media</th>
+                <th scope="col" style="color:#6C7293;">Start Date</th>
+                <th scope="col" style="color:#6C7293;">End Date</th>
+                <th scope="col" style="color:#6C7293;">Title</th>
+                <th scope="col" style="color:#6C7293;">Value</th>
+                <th scope="col" style="color:#6C7293;">File</th>
+                
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for i in smo_works %}
+                {% if i.smo_platform == 'Facebook'%}
+                <tr>
+                    <td style="color:white;">{{i.smo_platform}}</td>
+                    <td style="color:white;">{{i.smo_start_date}}</td>
+                    <td style="color:white;">{{i.smo_end_date}}</td>
+                    <td style="color:white;">{{i.smo_platform_title}}</td>
+                    <td style="color:white;">{{i.smo_count}}</td>
+                    <td style="color:white;">
+                        {% if i.smo_files.name|file_extension_is_image %}
+                        <img src="{{ i.smo_files.url }}">
+                        {% else %}
+                        <div class="badge badge-outline-primary"><a style="text-decoration: none;" href="{{ i.smo_files.url }}" download>
+                            Download</a>
+                        </div>
+                        {% endif %}
+                    </td>
+                   
+
+                </tr>
+               
+                {% endif %}
+                
+                {% endfor%}
+
+            
+
+                {% for i in smo_works %}
+                {% if i.smo_platform == 'Twitter'%}
+              
+                <tr>
+                    <td style="color:white;">{{i.smo_platform}}</td>
+                    <td style="color:white;">{{i.smo_start_date}}</td>
+                    <td style="color:white;">{{i.smo_end_date}}</td>
+                    <td style="color:white;">{{i.smo_platform_title}}</td>
+                    <td style="color:white;">{{i.smo_count}}</td>
+                    <td style="color:white;">
+                        {% if i.smo_files.name|file_extension_is_image %}
+                        <img src="{{ i.smo_files.url }}">
+                        {% else %}
+                        <div class="badge badge-outline-primary"><a style="text-decoration: none;" href="{{ i.smo_files.url }}" download>
+                            Download</a>
+                        </div>
+                        {% endif %}
+                    </td>
+
+                </tr>
+                {% endif %}
+                
+                {% endfor%}
+
+               
+
+                {% for i in smo_works %}
+                {% if i.smo_platform == 'Pinterest'%}
+               
+               
+                <tr>
+                    <td style="color:white;">{{i.smo_platform}}</td>
+                    <td style="color:white;">{{i.smo_start_date}}</td>
+                    <td style="color:white;">{{i.smo_end_date}}</td>
+                    <td style="color:white;">{{i.smo_platform_title}}</td>
+                    <td style="color:white;">{{i.smo_count}}</td>
+                    <td style="color:white;">
+                        {% if i.smo_files.name|file_extension_is_image %}
+                        <img src="{{ i.smo_files.url }}">
+                        {% else %}
+                        <div class="badge badge-outline-primary"><a style="text-decoration: none;" href="{{ i.smo_files.url }}" download>
+                            Download</a>
+                        </div>
+                        {% endif %}
+                    </td>
+
+                </tr>
+                {% endif %}
+                
+                {% endfor%}
+
+            
+
+                {% for i in smo_works %}
+                {% if i.smo_platform == 'Linkedin'%}
+              
+                <tr>
+                    <td style="color:white;">{{i.smo_platform}}</td>
+                    <td style="color:white;">{{i.smo_start_date}}</td>
+                    <td style="color:white;">{{i.smo_end_date}}</td>
+                    <td style="color:white;">{{i.smo_platform_title}}</td>
+                    <td style="color:white;">{{i.smo_count}}</td>
+                    <td style="color:white;">
+                        {% if i.smo_files.name|file_extension_is_image %}
+                        <img src="{{ i.smo_files.url }}">
+                        {% else %}
+                        <div class="badge badge-outline-primary"><a style="text-decoration: none;" href="{{ i.smo_files.url }}" download>
+                            Download</a>
+                        </div>
+                        {% endif %}
+                    </td>
+
+                </tr>
+                {% endif %}
+                
+                {% endfor%}
+
+               
+               
+
+                {% for i in smo_works %}
+                {% if i.smo_platform == 'Instagram'%}
+            
+                <tr>
+                    <td style="color:white;">{{i.smo_platform}}</td>
+                    <td style="color:white;">{{i.smo_start_date}}</td>
+                    <td style="color:white;">{{i.smo_end_date}}</td>
+                    <td style="color:white;">{{i.smo_platform_title}}</td>
+                    <td style="color:white;">{{i.smo_count}}</td>
+                    <td style="color:white;">
+                        {% if i.smo_files.name|file_extension_is_image %}
+                        <img src="{{ i.smo_files.url }}">
+                        {% else %}
+                        <div class="badge badge-outline-primary"><a style="text-decoration: none;" href="{{ i.smo_files.url }}" download>
+                            Download</a>
+                        </div>
+                        {% endif %}
+                    </td>
+
+                </tr>
+                {% endif %}
+                
+                {% endfor%}
+
+
+                {% for i in smo_works %}
+                {% if i.smo_platform == 'Tumblr'%}
+                
+                <tr>
+                    <td style="color:white;">{{i.smo_platform}}</td>
+                    <td style="color:white;">{{i.smo_start_date}}</td>
+                    <td style="color:white;">{{i.smo_end_date}}</td>
+                    <td style="color:white;">{{i.smo_platform_title}}</td>
+                    <td style="color:white;">{{i.smo_count}}</td>
+                    <td style="color:white;">
+                        {% if i.smo_files.name|file_extension_is_image %}
+                        <img src="{{ i.smo_files.url }}">
+                        {% else %}
+                        <div class="badge badge-outline-primary"><a style="text-decoration: none;" href="{{ i.smo_files.url }}" download>
+                            Download</a>
+                        </div>
+                        {% endif %}
+                    </td>
+
+                </tr>
+                {% endif %}
+                
+                {% endfor%}
+
+                {% for i in smo_works %}
+                {% if i.smo_platform == 'Directories'%}
+                
+                <tr>
+                    <td style="color:white;">{{i.smo_platform}}</td>
+                    <td style="color:white;">{{i.smo_start_date}}</td>
+                    <td style="color:white;">{{i.smo_end_date}}</td>
+                    <td style="color:white;">{{i.smo_platform_title}}</td>
+                    <td style="color:white;">{{i.smo_count}}</td>
+                    <td style="color:white;">
+                        {% if i.smo_files.name|file_extension_is_image %}
+                        <img src="{{ i.smo_files.url }}">
+                        {% else %}
+                        <div class="badge badge-outline-primary"><a style="text-decoration: none;" href="{{ i.smo_files.url }}" download>
+                            Download</a>
+                        </div>
+                        {% endif %}
+                    </td>
+
+                </tr>
+                {% endif %}
+                
+                {% endfor%}
+
+            
+
+                {% for i in smo_works %}
+                {% if i.smo_platform == 'Quora'%}
+                
+                <tr>
+                    <td style="color:white;">{{i.smo_platform}}</td>
+                    <td style="color:white;">{{i.smo_start_date}}</td>
+                    <td style="color:white;">{{i.smo_end_date}}</td>
+                    <td style="color:white;">{{i.smo_platform_title}}</td>
+                    <td style="color:white;">{{i.smo_count}}</td>
+                    <td style="color:white;">
+                        {% if i.smo_files.name|file_extension_is_image %}
+                        <img src="{{ i.smo_files.url }}">
+                        {% else %}
+                        <div class="badge badge-outline-primary"><a style="text-decoration: none;" href="{{ i.smo_files.url }}" download>
+                            Download</a>
+                        </div>
+                        {% endif %}
+                    </td>
+
+                </tr>
+                {% endif %}
+                
+                {% endfor%}
+
+
+        
+                {% for i in smo_works %}
+                
+                {% if i.smo_platform == 'YouTube'%}
+             
+                <tr>
+                    <td style="color:white;">{{i.smo_platform}}</td>
+                    <td style="color:white;">{{i.smo_start_date}}</td>
+                    <td style="color:white;">{{i.smo_end_date}}</td>
+                    <td style="color:white;">{{i.smo_platform_title}}</td>
+                    <td style="color:white;">{{i.smo_count}}</td>
+                    <td style="color:white;">
+                        {% if i.smo_files.name|file_extension_is_image %}
+                        <img src="{{ i.smo_files.url }}">
+                        {% else %}
+                        <div class="badge badge-outline-primary"><a style="text-decoration: none;" href="{{ i.smo_files.url }}" download>
+                            Download</a>
+                        </div>
+                        {% endif %}
+                    </td>
+
+                </tr>
+                {% endif %}
+                
+                {% endfor%}
+
+
+
+
+            </tbody>
+            </table>
+
+        </div>
+
+
+      </div>
+    </div>
+
+</div>
+
+
+{% endblock %}

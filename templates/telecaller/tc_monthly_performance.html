@@ -1,0 +1,97 @@
+{%extends 'telecaller/tc_base.html'%}
+{% load static %}
+
+{% block content %}
+<style>
+  * {
+    color: #6C7293;
+  }
+</style>
+
+
+
+<style>
+  .card {
+    margin-top: 1%;
+  }
+
+  #qwe {
+    font-size: 19px;
+    font-weight: 500;
+  }
+
+  .card .card-body {
+    flex: 1 1 auto;
+    padding: 0.5rem 0.2rem;
+  }
+
+
+  .table1 {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5vh;
+  }
+
+  th,
+  td {
+    text-align: center;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 5px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #191c24;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+  .card-title {
+    font-size: 20px;
+    font-weight: 900px;
+  }
+</style>
+
+<div class="row">
+  <div class="col-12 grid-margin table1">
+    <div class="card p-3">
+      <div class="card-body">
+        <h4 class="card-title ">Filteration</h4>
+        <form action="{% url 'tc_monthly_performance_det' %}" method="POST">
+          {%csrf_token%}
+          <div class="row mt-3" >
+            <div class="col-sm-6">
+              <label for="">Start Date</label>
+              <input type="date" name="start_date" id="start_date" class="form-control text-light " required>
+              
+            </div>
+        
+            <div class="col-sm-6">
+              <label for="">End Date</label>
+              <input type="date" name="end_date" id="end_date" class="form-control text-light" required>
+              
+            </div>
+          </div>
+
+          <div class="row mt-3 py-3">
+            <div class="col-sm-12" style="text-align: center;">
+              <input type="submit" class="btn btn-outline-primary">
+            </div>
+          </div>
+        </form>
+        
+    </div>
+  </div>
+</div>
+ {% endblock %}

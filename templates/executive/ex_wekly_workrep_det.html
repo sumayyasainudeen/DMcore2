@@ -1,0 +1,1311 @@
+{%extends 'executive/ex_base.html'%}
+<!-- DEVprojects -->
+{%load static%}
+{%block content%}
+
+<style>
+    .label-form
+    {
+        font-size: 13px;
+        color: #6C7293;
+        font-weight: 500;
+        letter-spacing: 0.06rem;
+    }
+    .filedBox
+    {
+        margin-top: 1rem;
+    }
+    .success_Box
+    {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-direction: row;
+      padding: 1rem 1.5rem;
+      display: none;
+      
+      border:1px solid #87f757;
+      background:rgba(49, 233, 46, 0.849) ;
+      color: rgb(255, 255, 255);
+ 
+    }
+    .error_Box
+    {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-direction: row;
+      padding: 1rem 1.5rem;
+      display: none;
+      border:1px solid #cb1616;
+      background: #cb1616;
+      color: rgb(255, 255, 255);
+    }
+  
+    .success_Box span, .errorBox span{
+      font-size: 0.90rem;
+      margin-right: 0.50rem;
+    }
+    .successBoxVisible
+    {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-direction: row;
+      padding: 1rem 1.5rem;
+      display: block;
+      border:1px solid #87f757;
+      background:rgba(49, 233, 46, 0.849) ;
+      color: rgb(255, 255, 255);
+    }
+    .errorBoxVisible
+    {    display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-direction: row;
+      padding: 1rem 1.5rem;
+      display: block;
+      border:1px solid #cb1616;
+      background: #cb1616;
+      color: rgb(255, 255, 255);
+
+    }
+</style>
+
+
+<div class="row pt-3">
+    <div class="" style="font-size: 20px;font-weight: 600;color:#6C7293;">
+      Client
+    </div>
+</div>
+
+
+<div class=" card success_Box mt-5 p-2" id="successBox">
+  <div class=""><span class="mdi mdi-checkbox-marked-circle-outline mdi-24px"> </span> <span>Success</span></div>
+ 
+</div>
+
+<div class=" card error_Box mt-5 p-2" id="errorBox">
+  <div class=""><span class="mdi mdi-alert-outline  mdi-24px"></span> <span>Error</span></div>
+</div>
+
+<div class="text-end">
+  <a href="{% url 'ex_weekly_rep_smo_socialmedia_details' work.id %}" class="btn btn-outline-info mt-4 mb-4">SMO Details</a>
+</div>
+
+
+<!--============= SMO Social Media Data Add Section =========-->
+
+  <div class="row">
+    <div class="col-md-6 col-sm-12 col-lg-6">
+      <div class="card mt-3 p-3">
+        <div class="row g-2">
+          <form id="myForm" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+           
+            <div class="col-md-4 ">
+              <input type="checkbox" class="ml-3 mt-2 text-light" onclick=check_fb() name="fb" id="fb" value="Facebook">
+              <label for="" class="mr-2 ml-3 mt-2" style="color:white ;">Facebook</label>
+          </div>
+          <div class="col-md-8 col-lg-12 col-sm-12 p-2">
+              <div class="row">
+                  <div class="col-md-6 col-sm-12 col-lg-6">
+                      <label class="label-form text-light" id="fblable1" style="display: none;">Start Date</label>
+                      <input type="date" name="fbst_dt" id="fbst_dt" class="drop form-control ml-3 mt-2 text-light" 
+                      style="border:1px solid #6C7293 ;color:#6C7293; display: none;" required>
+                  </div>
+                  <div class="col-md-6 col-sm-12 col-lg-6">
+                      <label id="fblable2" style="font-size:12px; color:#6C7293; display: none;">End Date</label>
+                      <input type="date" name="fbed_dt" id="fbed_dt" class="drop form-control ml-3 mt-2 text-light" 
+                      style="border:1px solid #6C7293 ;color:#6C7293; display: none;" required >
+  
+                  </div>
+              </div>
+              <input type="hidden" name="fb_workid" id="fb_workid" value="{{work.id}}">
+              <input type="text"  name="fb_txt" id="fb_txt" class="drop form-control ml-3 mt-2 text-light" 
+              style="border:1px solid #6C7293; display: none;" placeholder="Title name" required>
+              <input type="number"  name="fb_num" id="fb_num" class="drop form-control ml-3 mt-2 text-light" 
+              style="border:1px solid #6C7293; display: none;" placeholder="Count" required >
+              <input type="file" name="fb_file" id="fb_file" class="form-control mt-2  text-light"
+              style="text-decoration:none;border:none;background-color: #191c24;color:#6C7293 ;display: none;" required>
+  
+  
+          </div>
+          <div class="fb_addbtn text-end mt-3" >
+            <button type="button" id="saveBtn1" class="btn btn-outline-success" style="display: none;">+ </button>
+        </div>
+  
+          </form>
+        </div>
+    </div>
+    </div>
+    <div class="col-md-6 col-sm-12 col-lg-6">
+      <div class="card mt-3 p-3">
+        <div class="row g-2">
+          <form id="myForm" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="tw_workid" id="tw_workid" value="{{work.id}}">
+            <div class="col-md-4 ">
+              <input type="checkbox" class="ml-3 mt-2 text-light" onclick=check_tw() name="tw" id="tw" value="Twitter">
+              <label for="" class="mr-2 ml-3 mt-2" style="color:white ;">Twitter</label>
+          </div>
+          <div class="col-md-8 col-lg-12 col-sm-12 p-2 ">
+              <div class="row">
+                  <div class="col-md-6 col-sm-12 col-lg-6">
+                      <label class="label-form text-light" id="twlable1" style="display: none;">Start Date</label>
+                      <input type="date" name="twst_dt" id="twst_dt" class="drop form-control ml-3 mt-2 text-light" 
+                      style="border:1px solid #6C7293 ;color:#6C7293; display: none;" required>
+                  </div>
+                  <div class="col-md-6 col-sm-12 col-lg-6">
+                      <label id="twlable2" style="font-size:12px; color:#6C7293; display: none;">End Date</label>
+                      <input type="date" name="twed_dt" id="twed_dt" class="drop form-control ml-3 mt-2 text-light" 
+                      style="border:1px solid #6C7293 ;color:#6C7293; display: none;"required >
+  
+                  </div>
+              </div>
+              <input type="text"  name="tw_txt" id="tw_txt" class="drop form-control ml-3 mt-2 text-light" 
+              style="border:1px solid #6C7293; display: none;" placeholder="Title name" required>
+              <input type="number"  name="tw_num" id="tw_num" class="drop form-control ml-3 mt-2 text-light" 
+              style="border:1px solid #6C7293; display: none;" placeholder="Count" required>
+              
+              <input type="file" name="tw_file" id="tw_file" class="form-control mt-2 "
+              style="text-decoration:none;border:none;background-color: #191c24;color:#6C7293 ;display: none;" required>
+  
+              <div class="fb_addbtn text-end mt-3" >
+                  <button type="button" id="tw_addbtn" class="btn btn-outline-success" style="display: none;">+ </button>
+              </div>
+             
+          </div>
+  
+          </form>
+        </div>
+    </div>
+  
+    </div>
+    <div class="col-md-6 col-sm-12 col-lg-6">
+      <div class="card mt-3 p-3">
+        <div class="row g-2">
+          <form id="myForm" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="pin_workid" id="pin_workid" value="{{work.id}}">
+            
+            <div class="col-md-4 ">
+              <input type="checkbox" class="ml-3 mt-2 text-light" onclick=check_pin() name="pin" id="pin" value="Pinterest">
+              <label for="" class="mr-2 ml-3 mt-2" style="color:white ;">Pinterest</label>
+            </div>
+            <div class="col-md-8 col-lg-12 col-sm-12 p-2  ">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12 col-lg-6">
+                        <label class="label-form text-light" id="pinlable1" style="display: none;">Start Date</label>
+                        <input type="date" name="twst_dt" id="pinst_dt" class="drop form-control ml-3 mt-2 text-light" 
+                        style="border:1px solid #6C7293 ;color:#6C7293; display: none;">
+                    </div>
+                    <div class="col-md-6 col-sm-12 col-lg-6">
+                        <label id="pinlable2" style="font-size:12px; color:#6C7293; display: none;">End Date</label>
+                        <input type="date" name="twed_dt" id="pined_dt" class="drop form-control ml-3 mt-2 text-light" 
+                        style="border:1px solid #6C7293 ;color:#6C7293; display: none;" >
+    
+                    </div>
+                </div>
+                <input type="text"  name="pin_txt" id="pin_txt" class="drop form-control ml-3 mt-2 text-light" 
+                style="border:1px solid #6C7293; display: none;" placeholder="Title name">
+                <input type="number"  name="pin_num" id="pin_num" class="drop form-control ml-3 mt-2 text-light" 
+                style="border:1px solid #6C7293; display: none;" placeholder="Count">
+                
+                <input type="file" name="pin_file" id="pin_file" class="form-control mt-2 "
+                style="text-decoration:none;border:none;background-color: #191c24;color:#6C7293 ;display: none;">
+    
+                <div class="fb_addbtn text-end mt-3" >
+                    <button type="button" id="pin_addbtn" class="btn btn-outline-success" style="display: none;">+ </button>
+                </div>
+                
+            </div>
+          </form>
+        </div>
+    </div>
+    
+    </div>
+    <div class="col-md-6 col-sm-12 col-lg-6">
+      <div class="card mt-3 p-3">
+        <div class="row g-2">
+          <form id="myForm" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="link_workid" id="link_workid" value="{{work.id}}">
+            
+            <div class="col-md-4 ">
+              <input type="checkbox" class="ml-3 mt-2 text-light" onclick=check_link() name="link" id="link" value="Linkedin">
+              <label for="" class="mr-2 ml-3 mt-2" style="color:white ;">Linkedin</label>
+          </div>
+          <div class="col-md-8 col-lg-12 col-sm-12 p-2  ">
+              <div class="row">
+                  <div class="col-md-6 col-sm-12 col-lg-6">
+                      <label class="label-form text-light" id="linklable1" style="display: none;">Start Date</label>
+                      <input type="date" name="linkst_dt" id="linkst_dt" class="drop form-control ml-3 mt-2 text-light" 
+                      style="border:1px solid #6C7293 ;color:#6C7293; display: none;">
+                  </div>
+                  <div class="col-md-6 col-sm-12 col-lg-6">
+                      <label id="linklable2" style="font-size:12px; color:#6C7293; display: none;">End Date</label>
+                      <input type="date" name="linked_dt" id="linked_dt" class="drop form-control ml-3 mt-2 text-light" 
+                      style="border:1px solid #6C7293 ;color:#6C7293; display: none;" >
+      
+                  </div>
+              </div>
+              <input type="text"  name="link_txt" id="link_txt" class="drop form-control ml-3 mt-2 text-light" 
+              style="border:1px solid #6C7293; display: none;" placeholder="Title name">
+              <input type="number"  name="link_num" id="link_num" class="drop form-control ml-3 mt-2 text-light" 
+              style="border:1px solid #6C7293; display: none;" placeholder="Count">
+          
+              <input type="file" name="link_file" id="link_file" class="form-control mt-2 "
+              style="text-decoration:none;border:none;background-color: #191c24;color:#6C7293 ;display: none;">
+      
+              <div class="fb_addbtn text-end mt-3" >
+                  <button type="button" id="link_addbtn" class="btn btn-outline-success" style="display: none;">+ </button>
+              </div>
+             
+          </div>
+      
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 col-sm-12 col-lg-6">
+      <div class="card mt-3 p-3">
+        <div class="row g-2">
+          <form id="myForm" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="insta_workid" id="insta_workid" value="{{work.id}}">
+      
+            <div class="col-md-4 ">
+              <input type="checkbox" class="ml-3 mt-2 text-light" onclick=check_insta() name="insta" id="insta" value="Instagram">
+              <label for="" class="mr-2 ml-3 mt-2" style="color:white ;">Instagram</label>
+            </div>
+            <div class="col-md-8 col-lg-12 col-sm-12 p-2  ">
+              <div class="row">
+                  <div class="col-md-6 col-sm-12 col-lg-6">
+                      <label class="label-form text-light" id="instalable1" style="display: none;">Start Date</label>
+                      <input type="date" name="instast_dt" id="instast_dt" class="drop form-control ml-3 mt-2 text-light" 
+                      style="border:1px solid #6C7293 ;color:#6C7293; display: none;">
+                  </div>
+                  <div class="col-md-6 col-sm-12 col-lg-6">
+                      <label id="instalable2" style="font-size:12px; color:#6C7293; display: none;">End Date</label>
+                      <input type="date" name="instaed_dt" id="instaed_dt" class="drop form-control ml-3 mt-2 text-light" 
+                      style="border:1px solid #6C7293 ;color:#6C7293; display: none;" >
+            
+                  </div>
+              </div>
+              <input type="text"  name="insta_txt" id="insta_txt" class="drop form-control ml-3 mt-2 text-light" 
+              style="border:1px solid #6C7293; display: none;" placeholder="Title name">
+              <input type="number"  name="insta_num" id="insta_num" class="drop form-control ml-3 mt-2 text-light" 
+              style="border:1px solid #6C7293; display: none;" placeholder="Count" >
+              <input type="file" name="insta_file" id="insta_file" class="form-control mt-2 "
+              style="text-decoration:none;border:none;background-color: #191c24;color:#6C7293 ;display: none;">
+            
+              <div class="fb_addbtn text-end mt-3" >
+                  <button type="button" id="insta_addbtn" class="btn btn-outline-success" style="display: none;">+ </button>
+              </div>
+      
+            </div>
+            
+            
+            
+      
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 col-sm-12 col-lg-6">
+      
+      <div class="card mt-3 p-3">
+        <div class="row g-2">
+          <form id="myForm" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="tumb_workid" id="tumb_workid" value="{{work.id}}">
+  
+            <div class="col-md-4 ">
+              <input type="checkbox" class="ml-3 mt-2 text-light" onclick=check_tumb() name="tumb" id="tumb" value="Tumblr">
+              <label for="" class="mr-2 ml-3 mt-2" style="color:white ;">Tumblr</label>
+          </div>
+          <div class="col-md-8 col-lg-12 col-sm-12 p-2  ">
+              <div class="row">
+                  <div class="col-md-6 col-sm-12 col-lg-6">
+                      <label class="label-form text-light" id="tumblable1" style="display: none;">Start Date</label>
+                      <input type="date" name="tumbst_dt" id="tumbst_dt" class="drop form-control ml-3 mt-2 text-light" 
+                      style="border:1px solid #6C7293 ;color:#6C7293; display: none;">
+                  </div>
+                  <div class="col-md-6 col-sm-12 col-lg-6">
+                      <label id="tumblable2" style="font-size:12px; color:#6C7293; display: none;">End Date</label>
+                      <input type="date" name="tumbed_dt" id="tumbed_dt" class="drop form-control ml-3 mt-2 text-light" 
+                      style="border:1px solid #6C7293 ;color:#6C7293; display: none;" >
+  
+                  </div>
+              </div>
+              <input type="text"  name="tumb_txt" id="tumb_txt" class="drop form-control ml-3 mt-2 text-light" 
+              style="border:1px solid #6C7293; display: none;" placeholder="Title name">
+              <input type="number"  name="tumb_num" id="tumb_num" class="drop form-control ml-3 mt-2 text-light" 
+              style="border:1px solid #6C7293; display: none;" placeholder="Count" >
+            
+              <input type="file" name="tumb_file" id="tumb_file" class="form-control mt-2 "
+              style="text-decoration:none;border:none;background-color: #191c24;color:#6C7293 ;display: none;">
+  
+              <div class="fb_addbtn text-end mt-3" >
+                  <button type="button" id="tumb_addbtn" class="btn btn-outline-success" style="display: none;">+ </button>
+              </div>
+  
+              
+          </div>
+  
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 col-sm-12 col-lg-6">
+      
+      <div class="card mt-3 p-3">
+        <div class="row g-2">
+          <form id="myForm" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="diry_workid" id="diry_workid" value="{{work.id}}">
+  
+            <div class="col-md-4 ">
+                <input type="checkbox" class="ml-3 mt-2 text-light" onclick=check_diry() name="diry" id="diry" value="Directories">
+                <label for="" class="mr-2 ml-3 mt-2" style="color:white ;">Directories</label>
+            </div>
+            <div class="col-md-8 col-lg-12 col-sm-12 p-2  ">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12 col-lg-6">
+                        <label class="label-form text-light" id="dirylable1" style="display: none;">Start Date</label>
+                        <input type="date" name="diryst_dt" id="diryst_dt" class="drop form-control ml-3 mt-2 text-light" 
+                        style="border:1px solid #6C7293 ;color:#6C7293; display: none;">
+                    </div>
+                    <div class="col-md-6 col-sm-12 col-lg-6">
+                        <label id="dirylable2" style="font-size:12px; color:#6C7293; display: none;">End Date</label>
+                        <input type="date" name="tumbed_dt" id="diryed_dt" class="drop form-control ml-3 mt-2 text-light" 
+                        style="border:1px solid #6C7293 ;color:#6C7293; display: none;" >
+  
+                    </div>
+                </div>
+  
+                <input type="text"  name="diry_txt" id="diry_txt" class="drop form-control ml-3 mt-2 text-light" 
+                style="border:1px solid #6C7293; display: none;" placeholder="Title name">
+                <input type="number"  name="diry_num" id="diry_num" class="drop form-control ml-3 mt-2 text-light" 
+                style="border:1px solid #6C7293; display: none;" placeholder="Count" >
+            
+                <input type="file" name="diry_file" id="diry_file" class="form-control mt-2 "
+                style="text-decoration:none;border:none;background-color: #191c24;color:#6C7293 ;display: none;">
+  
+                <div class="fb_addbtn text-end mt-3" >
+                    <button type="button" id="diry_addbtn" class="btn btn-outline-success" style="display: none;">+ </button>
+                </div>
+  
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 col-sm-12 col-lg-6">
+      
+      <div class="card mt-3 p-3">
+        <div class="row g-2">
+          <form id="myForm" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="yt_workid" id="yt_workid" value="{{work.id}}">
+  
+            <div class="col-md-4 ">
+              <input type="checkbox" class="ml-3 mt-2 text-light" onclick=check_yt() name="yt" id="yt" value="YouTube">
+              <label for="" class="mr-2 ml-3 mt-2" style="color:white ;">YouTube</label>
+            </div>
+            <div class="col-md-8 col-lg-12 col-sm-12 p-2  ">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12 col-lg-6">
+                        <label class="label-form text-light" id="ytlable1" style="display: none;">Start Date</label>
+                        <input type="date" name="ytst_dt" id="ytst_dt" class="drop form-control ml-3 mt-2 text-light" 
+                        style="border:1px solid #6C7293 ;color:#6C7293; display: none;">
+                    </div>
+                    <div class="col-md-6 col-sm-12 col-lg-6">
+                        <label id="ytlable2" style="font-size:12px; color:#6C7293; display: none;">End Date</label>
+                        <input type="date" name="yted_dt" id="yted_dt" class="drop form-control ml-3 mt-2 text-light" 
+                        style="border:1px solid #6C7293 ;color:#6C7293; display: none;" >
+  
+                    </div>
+                </div>
+                <input type="text"  name="yt_txt" id="yt_txt" class="drop form-control ml-3 mt-2 text-light" 
+                style="border:1px solid #6C7293; display: none;" placeholder="Title name">
+                <input type="number"  name="yt_num" id="yt_num" class="drop form-control ml-3 mt-2 text-light" 
+                style="border:1px solid #6C7293; display: none;" placeholder="Count" >
+                
+                <input type="file" name="yt_file" id="yt_file" class="form-control mt-2 "
+                style="text-decoration:none;border:none;background-color: #191c24;color:#6C7293 ;display: none;">
+  
+                <div class="fb_addbtn text-end mt-3" >
+                    <button type="button" id="yt_addbtn" class="btn btn-outline-success" style="display: none;">+ </button>
+                </div>
+  
+              
+            </div>
+  
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 col-sm-12 col-lg-6">
+      
+      <div class="card mt-3 p-3">
+        <div class="row g-2">
+          <form id="myForm" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="qra_workid" id="qra_workid" value="{{work.id}}">
+  
+            <div class="col-md-4 ">
+              <input type="checkbox" class="ml-3 mt-2 text-light" onclick=check_qra() name="qra" id="qra" value="Quora">
+              <label for="" class="mr-2 ml-3 mt-2" style="color:white ;">Quora</label>
+          </div>
+          <div class="col-md-8 col-lg-12 col-sm-12 p-2  ">
+              <div class="row">
+                  <div class="col-md-6 col-sm-12 col-lg-6">
+                      <label class="label-form text-light" id="qralable1" style="display: none;">Start Date</label>
+                      <input type="date" name="qrast_dt" id="qrast_dt" class="drop form-control ml-3 mt-2 text-light" 
+                      style="border:1px solid #6C7293 ;color:#6C7293; display: none;">
+                  </div>
+                  <div class="col-md-6 col-sm-12 col-lg-6">
+                      <label id="qralable2" style="font-size:12px; color:#6C7293; display: none;">End Date</label>
+                      <input type="date" name="qraed_dt" id="qraed_dt" class="drop form-control ml-3 mt-2 text-light" 
+                      style="border:1px solid #6C7293 ;color:#6C7293; display: none;" >
+  
+                  </div>
+              </div>
+              <input type="text"  name="qra_txt" id="qra_txt" class="drop form-control ml-3 mt-2 text-light" 
+              style="border:1px solid #6C7293; display: none;" placeholder="Title name">
+              <input type="number"  name="tumb_num" id="qra_num" class="drop form-control ml-3 mt-2 text-light" 
+              style="border:1px solid #6C7293; display: none;" placeholder="Count" >
+  
+              <input type="file" name="qra_file" id="qra_file" class="form-control mt-2 "
+              style="text-decoration:none;border:none;background-color: #191c24;color:#6C7293 ;display: none;">
+              <div class="fb_addbtn text-end mt-3" >
+                  <button type="button" id="qra_addbtn" class="btn btn-outline-success" style="display: none;">+ </button>
+              </div>
+  
+            
+          </div>
+  
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+<!--=============End  SMO Social Media Data Add Section =========--> 
+
+<!-- Add jQuery from Google CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+<!--========== Facebook ===============-->
+
+<script>
+    document.getElementById("saveBtn1").addEventListener("click", function() {
+      var ckeck= document.getElementById("fb").value;
+      var test= document.getElementById("fb_txt").value;
+      var num = document.getElementById("fb_num").value;
+      var sdate = document.getElementById("fbst_dt").value;
+      var endate = document.getElementById("fbed_dt").value;
+      var wid = document.getElementById("fb_workid").value;
+      var file = document.getElementById("fb_file").files[0];
+     
+     
+      var data = new FormData();
+      data.append("fb_txt", test);
+      data.append("fb_num", num);
+      data.append("fb_file", file);
+      data.append("fbst_dt", sdate);
+      data.append("fbed_dt", endate);
+      data.append("fb_select", ckeck);
+      data.append("fb_workid", wid);
+     
+  
+      $.ajax({
+        url: "{% url 'ex_weekly_rep_smo_socialmedia' %}",
+        type: "POST",
+        data:data,
+        headers: {
+          "X-CSRFToken": "{{ csrf_token }}",
+        },
+        processData: false,
+        contentType: false,
+        success: function(response) {
+          // Handle the response if needed
+          console.log(response);
+          document.getElementById("fb_txt").value="";
+          document.getElementById("fb_num").value="";
+          document.getElementById("fb_file").value="";
+          var sbox = document.getElementById("successBox");
+          sbox.classList.remove('success_Box');
+          sbox.classList.add('successBoxVisible');
+        },
+        error: function(error) {
+          // Handle errors if needed
+          console.error(error);
+          var ebox = document.getElementById("errorBox");error_Box
+          ebox.classList.remove('error_Box');
+          ebox.classList.add('errorBoxVisible');
+        }
+      });
+    });
+</script>
+
+<!--========== Twitter ===============-->
+
+<script>
+  document.getElementById("tw_addbtn").addEventListener("click", function() {
+    var ckeck= document.getElementById("tw").value;
+    var test= document.getElementById("tw_txt").value;
+    var num = document.getElementById("tw_num").value;
+    var sdate = document.getElementById("twst_dt").value;
+    var endate = document.getElementById("twed_dt").value;
+    var file = document.getElementById("tw_file").files[0];
+    var wid = document.getElementById("tw_workid").value;
+   
+    var data = new FormData();
+    data.append("tw_txt", test);
+    data.append("tw_num", num);
+    data.append("tw_file", file);
+    data.append("twst_dt", sdate);
+    data.append("twed_dt", endate);
+    data.append("tw_select", ckeck);
+    data.append("tw_workid", wid);
+
+    $.ajax({
+      url: "{% url 'ex_weekly_rep_smo_socialmedia' %}",
+      type: "POST",
+      data:data,
+      headers: {
+        "X-CSRFToken": "{{ csrf_token }}",
+      },
+      processData: false,
+      contentType: false,
+      success: function(response) {
+        // Handle the response if needed
+        console.log(response);
+        document.getElementById("tw_txt").value="";
+        document.getElementById("tw_num").value="";
+        document.getElementById("tw_file").value="";
+        var sbox = document.getElementById("successBox");
+        sbox.classList.remove('success_Box');
+        sbox.classList.add('successBoxVisible');
+      },
+      error: function(error) {
+        // Handle errors if needed
+        console.error(error);
+        var ebox = document.getElementById("errorBox");error_Box
+        ebox.classList.remove('error_Box');
+        ebox.classList.add('errorBoxVisible');
+      }
+    });
+  });
+</script>
+
+
+<!--========== Pinterest ===============-->
+<script>
+  document.getElementById("pin_addbtn").addEventListener("click", function() {
+    var ckeck= document.getElementById("pin").value;
+    var test= document.getElementById("pin_txt").value;
+    var num = document.getElementById("pin_num").value;
+    var sdate = document.getElementById("pinst_dt").value;
+    var endate = document.getElementById("pined_dt").value;
+    var file = document.getElementById("pin_file").files[0];
+    var wid = document.getElementById("pin_workid").value;
+   
+    var data = new FormData();
+    data.append("pin_txt", test);
+    data.append("pin_num", num);
+    data.append("pin_file", file);
+    data.append("pinst_dt", sdate);
+    data.append("pined_dt", endate);
+    data.append("pin_select", ckeck);
+    data.append("pin_workid", wid);
+
+    $.ajax({
+      url: "{% url 'ex_weekly_rep_smo_socialmedia' %}",
+      type: "POST",
+      data:data,
+      headers: {
+        "X-CSRFToken": "{{ csrf_token }}",
+      },
+      processData: false,
+      contentType: false,
+      success: function(response) {
+        // Handle the response if needed
+        console.log(response);
+        document.getElementById("pin_txt").value="";
+        document.getElementById("pin_num").value="";
+        document.getElementById("pin_file").value="";
+      },
+      error: function(error) {
+        // Handle errors if needed
+        console.error(error);
+      }
+    });
+  });
+</script>
+
+
+<!--========== Linkedin ===============-->
+<script>
+  document.getElementById("link_addbtn").addEventListener("click", function() {
+    var ckeck= document.getElementById("link").value;
+    var test= document.getElementById("link_txt").value;
+    var num = document.getElementById("link_num").value;
+    var sdate = document.getElementById("linkst_dt").value;
+    var endate = document.getElementById("linked_dt").value;
+    var file = document.getElementById("link_file").files[0];
+    var wid = document.getElementById("link_workid").value;
+   
+    var data = new FormData();
+    data.append("link_txt", test);
+    data.append("link_num", num);
+    data.append("link_file", file);
+    data.append("linkst_dt", sdate);
+    data.append("linked_dt", endate);
+    data.append("link_select", ckeck);
+    data.append("link_workid", wid);
+
+    $.ajax({
+      url: "{% url 'ex_weekly_rep_smo_socialmedia' %}",
+      type: "POST",
+      data:data,
+      headers: {
+        "X-CSRFToken": "{{ csrf_token }}",
+      },
+      processData: false,
+      contentType: false,
+      success: function(response) {
+        // Handle the response if needed
+        console.log(response);
+        document.getElementById("link_txt").value="";
+        document.getElementById("link_num").value="";
+        document.getElementById("link_file").value="";
+      },
+      error: function(error) {
+        // Handle errors if needed
+        console.error(error);
+      }
+    });
+  });
+</script>
+
+
+<!--========== Instagram ===============-->
+<script>
+  document.getElementById("insta_addbtn").addEventListener("click", function() {
+    var ckeck= document.getElementById("insta").value;
+    var test= document.getElementById("insta_txt").value;
+    var num = document.getElementById("insta_num").value;
+    var sdate = document.getElementById("instast_dt").value;
+    var endate = document.getElementById("instaed_dt").value;
+    var file = document.getElementById("insta_file").files[0];
+    var wid = document.getElementById("insta_workid").value;
+   
+    var data = new FormData();
+    data.append("insta_txt", test);
+    data.append("insta_num", num);
+    data.append("insta_file", file);
+    data.append("instast_dt", sdate);
+    data.append("instaed_dt", endate);
+    data.append("insta_select", ckeck);
+    data.append("insta_workid", wid);
+
+    $.ajax({
+      url: "{% url 'ex_weekly_rep_smo_socialmedia' %}",
+      type: "POST",
+      data:data,
+      headers: {
+        "X-CSRFToken": "{{ csrf_token }}",
+      },
+      processData: false,
+      contentType: false,
+      success: function(response) {
+        // Handle the response if needed
+        console.log(response);
+        document.getElementById("insta_txt").value="";
+        document.getElementById("insta_num").value="";
+        document.getElementById("insta_file").value="";
+      },
+      error: function(error) {
+        // Handle errors if needed
+        console.error(error);
+      }
+    });
+  });
+</script>
+
+
+<!--========== Tumblr ===============-->
+<script>
+  document.getElementById("tumb_addbtn").addEventListener("click", function() {
+    var ckeck= document.getElementById("tumb").value;
+    var test= document.getElementById("tumb_txt").value;
+    var num = document.getElementById("tumb_num").value;
+    var sdate = document.getElementById("tumbst_dt").value;
+    var endate = document.getElementById("tumbed_dt").value;
+    var file = document.getElementById("tumb_file").files[0];
+    var wid = document.getElementById("tumb_workid").value;
+   
+    var data = new FormData();
+    data.append("tumb_txt", test);
+    data.append("tumb_num", num);
+    data.append("tumb_file", file);
+    data.append("tumbst_dt", sdate);
+    data.append("tumbed_dt", endate);
+    data.append("tumb_select", ckeck);
+    data.append("tumb_workid", wid);
+
+    $.ajax({
+      url: "{% url 'ex_weekly_rep_smo_socialmedia' %}",
+      type: "POST",
+      data:data,
+      headers: {
+        "X-CSRFToken": "{{ csrf_token }}",
+      },
+      processData: false,
+      contentType: false,
+      success: function(response) {
+        // Handle the response if needed
+        console.log(response);
+        document.getElementById("tumb_txt").value="";
+        document.getElementById("tumb_num").value="";
+        document.getElementById("tumb_file").value="";
+      },
+      error: function(error) {
+        // Handle errors if needed
+        console.error(error);
+      }
+    });
+  });
+</script>
+
+
+<!--========== Directories ===============-->
+<script>
+  document.getElementById("diry_addbtn").addEventListener("click", function() {
+    var ckeck= document.getElementById("diry").value;
+    var test= document.getElementById("diry_txt").value;
+    var num = document.getElementById("diry_num").value;
+    var sdate = document.getElementById("diryst_dt").value;
+    var endate = document.getElementById("diryed_dt").value;
+    var file = document.getElementById("diry_file").files[0];
+    var wid = document.getElementById("diry_workid").value;
+   
+    var data = new FormData();
+    data.append("diry_txt", test);
+    data.append("diry_num", num);
+    data.append("diry_file", file);
+    data.append("diryst_dt", sdate);
+    data.append("diryed_dt", endate);
+    data.append("diry_select", ckeck);
+    data.append("diry_workid", wid);
+
+    $.ajax({
+      url: "{% url 'ex_weekly_rep_smo_socialmedia' %}",
+      type: "POST",
+      data:data,
+      headers: {
+        "X-CSRFToken": "{{ csrf_token }}",
+      },
+      processData: false,
+      contentType: false,
+      success: function(response) {
+        // Handle the response if needed
+        console.log(response);
+        document.getElementById("diry_txt").value="";
+        document.getElementById("diry_num").value="";
+        document.getElementById("diry_file").value="";
+      },
+      error: function(error) {
+        // Handle errors if needed
+        console.error(error);
+      }
+    });
+  });
+</script>
+
+
+<!--========== YouTube ===============-->
+<script>
+  document.getElementById("yt_addbtn").addEventListener("click", function() {
+    var ckeck= document.getElementById("yt").value;
+    var test= document.getElementById("yt_txt").value;
+    var num = document.getElementById("yt_num").value;
+    var sdate = document.getElementById("yt_dt").value;
+    var endate = document.getElementById("yt_dt").value;
+    var file = document.getElementById("yt_file").files[0];
+    var wid = document.getElementById("yt_workid").value;
+   
+    var data = new FormData();
+    data.append("yt_txt", test);
+    data.append("yt_num", num);
+    data.append("yt_file", file);
+    data.append("ytst_dt", sdate);
+    data.append("yted_dt", endate);
+    data.append("yt_select", ckeck);
+    data.append("yt_workid", wid);
+
+    $.ajax({
+      url: "{% url 'ex_weekly_rep_smo_socialmedia' %}",
+      type: "POST",
+      data:data,
+      headers: {
+        "X-CSRFToken": "{{ csrf_token }}",
+      },
+      processData: false,
+      contentType: false,
+      success: function(response) {
+        // Handle the response if needed
+        console.log(response);
+        document.getElementById("yt_txt").value="";
+        document.getElementById("yt_num").value="";
+        document.getElementById("yt_file").value="";
+      },
+      error: function(error) {
+        // Handle errors if needed
+        console.error(error);
+      }
+    });
+  });
+</script>
+
+
+<!--========== Quora ===============-->
+<script>
+  document.getElementById("qra_addbtn").addEventListener("click", function() {
+    var ckeck= document.getElementById("qra").value;
+    var test= document.getElementById("qra_txt").value;
+    var num = document.getElementById("qra_num").value;
+    var sdate = document.getElementById("qrast_dt").value;
+    var endate = document.getElementById("qraed_dt").value;
+    var file = document.getElementById("qra_file").files[0];
+    var wid = document.getElementById("qra_workid").value;
+   
+    var data = new FormData();
+    data.append("qra_txt", test);
+    data.append("qra_num", num);
+    data.append("qra_file", file);
+    data.append("qrast_dt", sdate);
+    data.append("qraed_dt", endate);
+    data.append("qra_select", ckeck);
+    data.append("qra_workid", wid);
+
+    $.ajax({
+      url: "{% url 'ex_weekly_rep_smo_socialmedia' %}",
+      type: "POST",
+      data:data,
+      headers: {
+        "X-CSRFToken": "{{ csrf_token }}",
+      },
+      processData: false,
+      contentType: false,
+      success: function(response) {
+        // Handle the response if needed
+        console.log(response);
+        document.getElementById("qra_txt").value="";
+        document.getElementById("qra_num").value="";
+        document.getElementById("qra_file").value="";
+      },
+      error: function(error) {
+        // Handle errors if needed
+        console.error(error);
+      }
+    });
+  });
+</script>
+
+
+
+<script>
+
+    function check_fb(){
+      var chk_fb=document.getElementById("fb").checked;
+      var text = document.getElementById('fb_txt');
+      var files = document.getElementById('fb_file');
+      var num = document.getElementById('fb_num');
+      var st_date = document.getElementById('fbst_dt');
+      var ed_date = document.getElementById('fbed_dt');
+      var lable1 = document.getElementById('fblable1');
+      var lable2 = document.getElementById('fblable2');
+      var btn = document.getElementById('saveBtn1');
+    
+      
+      if (chk_fb==true){
+    
+        text.style=('display: block');
+        files.style=('display: block');
+        lable1.style=('display: block');
+        lable2.style=('display: block');
+        num.style=('display: block');
+        st_date.style=('display: block');
+        ed_date.style=('display: block');
+        btn.style=('display: block');
+        lable1.className ='label-form';
+        lable2.className ='label-form';
+
+
+      }else{
+      
+        text.style=('display: none');
+        files.style=('display: none');
+        lable1.style=('display: none');
+        lable2.style=('display: none');
+        num.style=('display: none');
+        st_date.style=('display: none');
+        ed_date.style=('display: none');
+        btn.style=('display: none');
+      }
+    }
+    function check_tw(){
+      var chk_tw=document.getElementById("tw").checked;
+      var textarea = document.getElementById('tw_txt');
+      var files = document.getElementById('tw_file');
+
+      var num = document.getElementById('tw_num');
+      var st_date = document.getElementById('twst_dt');
+      var ed_date = document.getElementById('twed_dt');
+      var lable1 = document.getElementById('twlable1');
+      var lable2 = document.getElementById('twlable2');
+      var btn = document.getElementById('tw_addbtn');
+    
+      if (chk_tw==true){
+    
+        textarea.style=('display: block');
+        files.style=('display: block');
+        num.style=('display: block');
+        st_date.style=('display: block');
+        ed_date.style=('display: block');
+        lable1.style=('display: block');
+        lable2.style=('display: block');
+        btn.style=('display: block');
+        lable1.className ='label-form';
+        lable2.className ='label-form';
+
+
+
+      }else{
+      
+        textarea.style=('display: none');
+        files.style=('display: none');
+        num.style=('display: none');
+        st_date.style=('display: none');
+        ed_date.style=('display: none');
+        lable1.style=('display: none');
+        lable2.style=('display: none');
+        btn.style=('display: none');
+      }
+    }
+  
+    function check_pin(){
+      var chk_pin=document.getElementById("pin").checked;
+      var textarea = document.getElementById('pin_txt');
+      var files = document.getElementById('pin_file');
+
+      var num = document.getElementById('pin_num');
+      var st_date = document.getElementById('pinst_dt');
+      var ed_date = document.getElementById('pined_dt');
+      var lable1 = document.getElementById('pinlable1');
+      var lable2 = document.getElementById('pinlable2');
+      var btn = document.getElementById('pin_addbtn');
+      if (chk_pin==true){
+    
+        textarea.style=('display: block');
+        files.style=('display: block');
+        num.style=('display: block');
+        st_date.style=('display: block');
+        ed_date.style=('display: block');
+        lable1.style=('display: block');
+        lable2.style=('display: block');
+        btn.style=('display: block');
+        lable1.className ='label-form';
+        lable2.className ='label-form';
+
+
+      }else{
+      
+        textarea.style=('display: none');
+        files.style=('display: none');
+        num.style=('display: none');
+        st_date.style=('display: none');
+        ed_date.style=('display: none');
+        lable1.style=('display: none');
+        lable2.style=('display: none');
+        btn.style=('display: none');
+      }
+    }
+  
+    function check_link(){
+      var chk_link=document.getElementById("link").checked;
+      var textarea = document.getElementById('link_txt');
+      var files = document.getElementById('link_file');
+
+      var num = document.getElementById('link_num');
+      var st_date = document.getElementById('linkst_dt');
+      var ed_date = document.getElementById('linked_dt');
+      var lable1 = document.getElementById('linklable1');
+      var lable2 = document.getElementById('linklable2');
+      var btn = document.getElementById('link_addbtn');
+
+      if (chk_link==true){
+    
+        textarea.style=('display: block');
+        files.style=('display: block');
+
+        num.style=('display: block');
+        st_date.style=('display: block');
+        ed_date.style=('display: block');
+        lable1.style=('display: block');
+        lable2.style=('display: block');
+        btn.style=('display: block');
+        lable1.className ='label-form';
+        lable2.className ='label-form';
+
+      }else{
+      
+        textarea.style=('display: none');
+        files.style=('display: none');
+        num.style=('display: none');
+        st_date.style=('display: none');
+        ed_date.style=('display: none');
+        lable1.style=('display: none');
+        lable2.style=('display: none');
+        btn.style=('display: none');
+      }
+    }
+  
+    function check_insta(){
+      var chk_insta=document.getElementById("insta").checked;
+      var textarea = document.getElementById('insta_txt');
+      var files = document.getElementById('insta_file');
+
+      var num = document.getElementById('insta_num');
+      var st_date = document.getElementById('instast_dt');
+      var ed_date = document.getElementById('instaed_dt');
+      var lable1 = document.getElementById('instalable1');
+      var lable2 = document.getElementById('instalable2');
+      var btn = document.getElementById('insta_addbtn');
+
+      if (chk_insta==true){
+    
+        textarea.style=('display: block');
+        files.style=('display: block');
+
+        num.style=('display: block');
+        st_date.style=('display: block');
+        ed_date.style=('display: block');
+        lable1.style=('display: block');
+        lable2.style=('display: block');
+        btn.style=('display: block');
+        lable1.className ='label-form';
+        lable2.className ='label-form';
+
+      }else{
+      
+        textarea.style=('display: none');
+        files.style=('display: none');
+        num.style=('display: none');
+        st_date.style=('display: none');
+        ed_date.style=('display: none');
+        lable1.style=('display: none');
+        lable2.style=('display: none');
+        btn.style=('display: none');
+      }
+    }
+  
+    function check_tumb(){
+      var chk_tumb=document.getElementById("tumb").checked;
+      var textarea = document.getElementById('tumb_txt');
+      var files = document.getElementById('tumb_file');
+
+      var num = document.getElementById('tumb_num');
+      var st_date = document.getElementById('tumbst_dt');
+      var ed_date = document.getElementById('tumbed_dt');
+      var lable1 = document.getElementById('tumblable1');
+      var lable2 = document.getElementById('tumblable2');
+      var btn = document.getElementById('tumb_addbtn');
+
+      if (chk_tumb==true){
+    
+        textarea.style=('display: block');
+        files.style=('display: block');
+
+        num.style=('display: block');
+        st_date.style=('display: block');
+        ed_date.style=('display: block');
+        lable1.style=('display: block');
+        lable2.style=('display: block');
+        btn.style=('display: block');
+        lable1.className ='label-form';
+        lable2.className ='label-form';
+
+      }else{
+      
+        textarea.style=('display: none');
+        files.style=('display: none');
+        num.style=('display: none');
+        st_date.style=('display: none');
+        ed_date.style=('display: none');
+        lable1.style=('display: none');
+        lable2.style=('display: none');
+        btn.style=('display: none');
+      }
+    }
+  
+    function check_diry(){
+      var chk_diry=document.getElementById("diry").checked;
+      var textarea = document.getElementById('diry_txt');
+      var files = document.getElementById('diry_file');
+
+      var num = document.getElementById('diry_num');
+      var st_date = document.getElementById('diryst_dt');
+      var ed_date = document.getElementById('diryed_dt');
+      var lable1 = document.getElementById('dirylable1');
+      var lable2 = document.getElementById('dirylable2');
+      var btn = document.getElementById('diry_addbtn');
+
+      if (chk_diry==true){
+    
+        textarea.style=('display: block');
+        files.style=('display: block');
+        num.style=('display: block');
+        st_date.style=('display: block');
+        ed_date.style=('display: block');
+        lable1.style=('display: block');
+        lable2.style=('display: block');
+        btn.style=('display: block');
+        lable1.className ='label-form';
+        lable2.className ='label-form';
+
+      }else{
+      
+        textarea.style=('display: none');
+        files.style=('display: none');
+        textarea.style=('display: none');
+        files.style=('display: none');
+        num.style=('display: none');
+        st_date.style=('display: none');
+        ed_date.style=('display: none');
+        lable1.style=('display: none');
+        lable2.style=('display: none');
+        btn.style=('display: none');
+      }
+    }
+  
+    function check_yt(){
+      var chk_yt=document.getElementById("yt").checked;
+      var textarea = document.getElementById('yt_txt');
+      var files = document.getElementById('yt_file');
+
+      var num = document.getElementById('yt_num');
+      var st_date = document.getElementById('ytst_dt');
+      var ed_date = document.getElementById('yted_dt');
+      var lable1 = document.getElementById('ytlable1');
+      var lable2 = document.getElementById('ytlable2');
+      var btn = document.getElementById('yt_addbtn');
+      
+      if (chk_yt==true){
+    
+        textarea.style=('display: block');
+        files.style=('display: block');
+
+        num.style=('display: block');
+        st_date.style=('display: block');
+        ed_date.style=('display: block');
+        lable1.style=('display: block');
+        lable2.style=('display: block');
+        btn.style=('display: block');
+        lable1.className ='label-form';
+        lable2.className ='label-form';
+      }else{
+      
+        textarea.style=('display: none');
+        files.style=('display: none');
+        num.style=('display: none');
+        st_date.style=('display: none');
+        ed_date.style=('display: none');
+        lable1.style=('display: none');
+        lable2.style=('display: none');
+        btn.style=('display: none');
+      }
+    }
+  
+    function check_qra(){
+      var chk_qra=document.getElementById("qra").checked;
+      var textarea = document.getElementById('qra_txt');
+      var files = document.getElementById('qra_file');
+
+      var num = document.getElementById('qra_num');
+      var st_date = document.getElementById('qrast_dt');
+      var ed_date = document.getElementById('qraed_dt');
+      var lable1 = document.getElementById('qralable1');
+      var lable2 = document.getElementById('qralable2');
+      var btn = document.getElementById('qra_addbtn');
+      
+      if (chk_qra==true){
+    
+        textarea.style=('display: block');
+        files.style=('display: block');
+
+        num.style=('display: block');
+        st_date.style=('display: block');
+        ed_date.style=('display: block');
+        lable1.style=('display: block');
+        lable2.style=('display: block');
+        btn.style=('display: block');
+        lable1.className ='label-form';
+        lable2.className ='label-form';
+      }else{
+      
+        textarea.style=('display: none');
+        files.style=('display: none');
+        num.style=('display: none');
+        st_date.style=('display: none');
+        ed_date.style=('display: none');
+        lable1.style=('display: none');
+        lable2.style=('display: none');
+        btn.style=('display: none');
+      }
+    }
+    
+   
+</script>
+
+
+<!-- To disapper The SuccessBox and ErrorBox-->
+<script>
+  // Wait for the DOM to load
+  $(document).ready(function() {
+      // Function to make the div disappear
+      function makeDivDisappear() {
+          var myDiv = document.getElementById("successBox");
+          myDiv.style.display = "none";
+      }
+
+      // Set a timeout to call the function after 3 seconds (3000 milliseconds)
+      setTimeout(makeDivDisappear, 4000);
+  });
+</script>
+
+<script>
+  // Wait for the DOM to load
+  $(document).ready(function() {
+      // Function to make the div disappear
+      function makeDivDisappear() {
+          var myDiv = document.getElementById("errorBox");
+          myDiv.style.display = "none";
+      }
+
+      // Set a timeout to call the function after 3 seconds (3000 milliseconds)
+      setTimeout(makeDivDisappear, 4000);
+  });
+</script>
+
+
+
+{% endblock %}

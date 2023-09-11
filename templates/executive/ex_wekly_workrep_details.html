@@ -1,0 +1,214 @@
+{%extends 'executive/ex_base.html'%}
+{%load static%}
+{% load custom_filters %}
+{%block content%}
+
+<style>
+    .label-control
+    {
+        font-size: 14px;
+        color: #5c5e6b;
+        font-weight: 500;
+    }
+    .form-control, .form-control:focus
+    {
+        color: rgb(221, 224, 226);
+    }
+  
+</style>
+
+<div class="row pt-3" style="background-color: black;">
+    <div class="" style="font-size: 20px;font-weight: 600;color:#6C7293;">Client</div>
+</div>
+
+<div class="row mt-3">
+    <div class="col-sm-12 col-md-6 col-lg-12">
+        <div class="card p-3 ">
+            <h4 class="mt-3 p-2 text-center">{{work.task}}</h4>
+            <form action="#" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6 col-sm-12 col-lg-6">
+                        <input type="hidden" id="workid" value="{{work.id}}">
+                        <div class="inputBox mt-2 p-2">
+                            <label class="mb-2 label-control">Start Date</label>
+                            <input type="date" name="" id="st_dt" class="drop form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-12 col-lg-6">
+                        <div class="inputBox mt-2 p-2">
+                            <label class="mb-2 label-control">End Date</label>
+                            <input type="date" name=""  id="ed_dt" class="drop form-control" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="inputBox mt-2 p-2">
+                    <label class="mb-2 label-control">In which Platform</label>
+                    <input type="text" name="" id="txt1" class="drop form-control" required>
+                </div>
+                <div class="inputBox p-2">
+                    <label class="mb-2 label-control">Title </label>
+                    <input type="text" name="" id="txt2" class="drop form-control" required>
+                </div>
+                <div class="inputBox  p-2">
+                    <label class="mb-2 label-control">Value</label>
+                    <input type="number" name="" id="num" class="drop form-control" required>
+                </div>
+                <div class="inputBox  p-2">
+                    <label class="mb-2 label-control">File</label>
+                    <input type="file" name="" id="file" class="drop form-control" required>
+                </div>
+                <div class="submitBox text-center mt-4 mb-4">
+                    <button type="button" id="details_save" class="btn btn-outline-success">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+
+    <div class="col-md-6 col-sm-12 col-lg-12 ">
+
+      <div class="card">
+        <div class="table-responsive mt-3 mb-3 container">
+
+            <table class="table   table-bordered " id="worksTable">
+            <thead style="background-color: black;">
+                <tr>
+                <th scope="col" style="color:#6C7293;">Social Media</th>
+                <th scope="col" style="color:#6C7293;">Start Date</th>
+                <th scope="col" style="color:#6C7293;">End Date</th>
+                <th scope="col" style="color:#6C7293;">Title</th>
+                <th scope="col" style="color:#6C7293;">Value</th>
+                <th scope="col" style="color:#6C7293;">File</th>
+                
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for i in works_details %}
+               
+                <tr>
+                    <td style="color:white;">{{i.smo_platform}}</td>
+                    <td style="color:white;">{{i.smo_start_date}}</td>
+                    <td style="color:white;">{{i.smo_end_date}}</td>
+                    <td style="color:white;">{{i.smo_platform_title}}</td>
+                    <td style="color:white;">{{i.smo_count}}</td>
+                    <td style="color:white;">
+                        {% if i.smo_files.name|file_extension_is_image %}
+                        <img src="{{ i.smo_files.url }}">
+                        {% else %}
+                        <div class="badge badge-outline-primary"><a style="text-decoration: none;" href="{{ i.smo_files.url }}" download>
+                            Download</a>
+                        </div>
+                        {% endif %}
+                    </td>
+                   
+
+                </tr>
+               
+               
+                
+                {% endfor%}
+
+            
+
+              
+            </tbody>
+            </table>
+
+        </div>
+
+
+      </div>
+    </div>
+
+</div>
+
+
+
+<!-- Add jQuery from Google CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+<!--========== Facebook ===============-->
+
+<script>
+    document.getElementById("details_save").addEventListener("click", function() {
+    var test1= document.getElementById("txt1").value;
+      var test2= document.getElementById("txt2").value;
+      var num = document.getElementById("num").value;
+      var sdate = document.getElementById("st_dt").value;
+      var endate = document.getElementById("ed_dt").value;
+      var wid = document.getElementById("workid").value;
+      var file = document.getElementById("file").files[0];
+     
+     
+      var data = new FormData();
+      data.append("txt1", test1);
+      data.append("txt2", test2);
+      data.append("num", num);
+      data.append("file", file);
+      data.append("st_dt", sdate);
+      data.append("ed_dt", endate);
+      data.append("workid", wid);
+     
+  
+      $.ajax({
+        url: "{% url 'ex_weekly_rep_smo_socialmedia' %}",
+        type: "POST",
+        data:data,
+        headers: {
+          "X-CSRFToken": "{{ csrf_token }}",
+        },
+        processData: false,
+        contentType: false,
+        
+        success: function(response) {
+            if (response.status === "success") {
+                console.log(response);
+                document.getElementById("txt1").value="";
+                document.getElementById("txt2").value="";
+                document.getElementById("num").value="";
+                document.getElementById("file").value="";
+               
+                var works_details = response.works_details;
+
+                // Clear the table body
+                $("#worksTable tbody").empty();
+
+                // Populate the table with the received data
+                $.each(works_details, function(index, item) {
+                    var row = $("<tr>");
+                    // Customize this based on your 'Smo_socialmedia' model fields
+                    row.append($("<td>").text(item.smo_platform));
+                    row.append($("<td>").text(item.smo_start_date));
+                    row.append($("<td>").text(item.smo_end_date));
+                    row.append($("<td>").text(item.smo_platform_title));
+                    row.append($("<td>").text(item.smo_count));
+
+                    // Add the image to the table cell
+                    var imageCell = $("<td>");
+                   
+                    
+                    var imageTag = $("<img>").attr("src", "/media/" + item.smo_files); // Replace "image_url_field" with the actual name of the image field in your model
+                    imageCell.append(imageTag);
+                    
+                    row.append(imageCell);
+
+                    // Add more table cells based on your 'Smo_socialmedia' model fields
+                    $("#worksTable tbody").append(row);
+                });
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error("AJAX Error:", status, error);
+        }
+      });
+    });
+</script>
+
+
+{% endblock %}
